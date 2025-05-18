@@ -4,6 +4,29 @@
 #include <iomanip>
 
 using namespace std;
+ 
+enum class GydymoBusena {
+    LaukiaRegistracijos,
+    LaukiaGydytojo,
+    Apziurimas,
+    TyrimuLaukimas,
+    LaukiaRezultatu,
+    Gydomas,
+    Baigta
+};
+
+string busenaToString(GydymoBusena b) {
+    switch (b) {
+        case GydymoBusena::LaukiaRegistracijos: return "Laukia registracijos";
+        case GydymoBusena::LaukiaGydytojo: return "Laukia gydytojo";
+        case GydymoBusena::Apziurimas: return "Apžiūrimas";
+        case GydymoBusena::TyrimuLaukimas: return "Laukia tyrimų";
+        case GydymoBusena::LaukiaRezultatu: return "Laukia rezultatų";
+        case GydymoBusena::Gydomas: return "Gydomas";
+        case GydymoBusena::Baigta: return "Gydymas baigtas";
+        default: return "Nežinoma";
+    }
+}
 
 void rodytiMeniu() {
     std::cout << "\n _________________________________\n";
@@ -89,11 +112,16 @@ void pradetiZaidima() {
 
 // Bazinė klasė Darbuotojas
 class Darbuotojas {
-protected:
-    string vardas;
-    string pavarde;
-    string pareigos;
+private:
+    static int nextID;              // ID generatorius
+    int id;                        //darbuotojo ID
+    std::string vardas;
+    std::string pavarde;
+    std::string pareigos;
     bool uzimtas;
+    std::string telefonas;
+    std::string elPastas;
+    std::vector<int> darboValandos; // Darbo valandos (pvz. nuo 8 iki 17)
 public:
     Darbuotojas(string v, string p, string par)
         : vardas(v), pavarde(p), pareigos(par), uzimtas(false) {}
@@ -126,22 +154,89 @@ public:
     Slaugytoja(string v, string p) : Darbuotojas(v, p, "Slaugytoja") {}
 };
 
+// Paveldima klasė Administratorius
+class Administratorius : public Darbuotojas {
+public:
+    Administratorius(string v, string p) : Darbuotojas(v, p, "Administratorius") {}
+};
+
+// Pvaveldima klasė Laborantas
+class Laborantas : public Darbuotojas {
+public:
+    Laborantas(string v, string p) : Darbuotojas(v, p, "Laborantas") {}
+};
+
+// Paveldima klasė Valytoja
+class Valytoja : public Darbuotojas {
+public:
+    Valytoja(string v, string p) : Darbuotojas(v, p, "Valytoja") {}
+};
+
 // Pacientas klasė
 class Pacientas {
     string vardas;
     string sveikatosBusena;
     int laukimoLaikas;
+    GydymoBusena busena;
+    int likoLaikoBusenoje; // kiek dar laiko liko paciento busenoje (minutemis)
 public:
-    Pacientas(string v, string sb) : vardas(v), sveikatosBusena(sb), laukimoLaikas(0) {}
+    Pacientas(string v, string sb) : vardas(v), sveikatosBusena(sb), laukimoLaikas(0), busena(GydymoBusena::LaukiaRegistracijos), likoLaikoBusenoje(1) {}
 
     void didintiLaukimoLaika() { laukimoLaikas++; }
+
+    // Simuliuoja vienos minutės prabėgimą paciento būsenos procese
+    void simuliuotiMinute() {
+        if (likoLaikoBusenoje > 0)
+            likoLaikoBusenoje--;
+        if (likoLaikoBusenoje == 0)
+            pereitiIKitaBusena();
+    }
+
+    // Pereina į kitą gydymo būseną ir nustato laiką naujoje būsenoje
+    void pereitiIKitaBusena() {
+        switch (busena) {
+            case GydymoBusena::LaukiaRegistracijos:
+                busena = GydymoBusena::LaukiaGydytojo;
+                likoLaikoBusenoje = 2;
+                break;
+            case GydymoBusena::LaukiaGydytojo:
+                busena = GydymoBusena::Apziurimas;
+                likoLaikoBusenoje = 5;
+                break;
+            case GydymoBusena::Apziurimas:
+                busena = GydymoBusena::TyrimuLaukimas;
+                likoLaikoBusenoje = 4;
+                break;
+            case GydymoBusena::TyrimuLaukimas:
+                busena = GydymoBusena::LaukiaRezultatu;
+                likoLaikoBusenoje = 3;
+                break;
+            case GydymoBusena::LaukiaRezultatu:
+                busena = GydymoBusena::Gydomas;
+                likoLaikoBusenoje = 4;
+                break;
+            case GydymoBusena::Gydomas:
+                busena = GydymoBusena::Baigta;
+                likoLaikoBusenoje = 0;
+                break;
+            case GydymoBusena::Baigta:
+                // jau baigta, nekeičiam
+                break;
+        }
+    }
+
     string getVardas() { return vardas; }
     string getSveikatosBusena() { return sveikatosBusena; }
     int getLaukimoLaikas() { return laukimoLaikas; }
+    GydymoBusena getBusena() const { return busena; } 
 
-    void info() {
-        cout << "- Pacientas: " << vardas << ", sveikatos būklė: " << sveikatosBusena
-             << ", laukimo laikas: " << laukimoLaikas << " min." << endl;
+    void info() const {
+        cout << "- Pacientas: " << vardas
+             << ", sveikatos būklė: " << sveikatosBusena
+             << ", laukimo laikas: " << laukimoLaikas << " min."
+             << ", būklė: " << busenaToString(busena)
+             << ", liko laiko būsenai: " << likoLaikoBusenoje << " min."
+             << endl;
     }
 };
 
@@ -205,6 +300,71 @@ public:
         }
         cout << endl;
     }
+
+    void registruotiPacienta() {
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        string vardas, bukle;
+        cout << "Įveskite paciento vardą: ";
+        getline(cin, vardas);
+        cout << "Įveskite sveikatos būklę: ";
+        getline(cin, bukle);
+        pridetiPacienta(Pacientas(vardas, bukle));
+        cout << "Pacientas užregistruotas sėkmingai!\n";
+    }
+
+    void simuliuotiMinute() {
+    for (auto& p : pacientai) {
+        p.simuliuotiMinute();
+    }
+}
+    void rodytiPacientuBusena() {
+    cout << "Pacientų gydymo būsenos:\n";
+    for (auto& p : pacientai) {
+        p.info();
+    }
+}
+
+    // Paveldima klasė Finansai
+    class Finansai {
+    double balansas;
+public:
+    Finansai(double pradinis) : balansas(pradinis) {}
+
+    void pridetiPajamu(double suma) {
+        balansas += suma;
+        cout << "Pridėta pajamų: " << suma << " EUR. Naujas balansas: " << balansas << " EUR.\n";
+    }
+
+    void sumazintiIslaidas(double suma) {
+        balansas -= suma;
+        cout << "Išlaidos: " << suma << " EUR. Naujas balansas: " << balansas << " EUR.\n";
+    }
+
+    double gautiBalansa() const {
+        return balansas;
+    }
+
+    void info() const {
+        cout << "Poliklinikos balansas: " << balansas << " EUR\n";
+    }
+};
+
+// Klasė Inspekcija
+class Inspekcija {
+public:
+    static void atliktiPatikra(Finansai& finansai, int neatitikimuSkaicius) {
+        cout << "Vykdoma inspekcija...\n";
+        if (neatitikimuSkaicius > 0) {
+            double bauda = neatitikimuSkaicius * 50.0;
+            cout << "Rasta neatitikimų: " << neatitikimuSkaicius 
+                 << ". Skiriama bauda: " << bauda << " EUR.\n";
+            finansai.sumazintiIslaidas(bauda);
+        } else {
+            cout << "Poliklinika atitiko visus reikalavimus. Baudų nėra.\n";
+        }
+    }
+};
+
 };
 
 int main() {
@@ -264,6 +424,24 @@ jgs  `=._`=./
     poliklinika.pridetiDarbuotoja(new Slaugytoja("Renata", "Kundrotienė"));
     poliklinika.pridetiDarbuotoja(new Slaugytoja("Laima", "Navickaitė"));
 
+    // Administratoriai (3)
+    poliklinika.pridetiDarbuotoja(new Administratorius("Ieva", "Naveraitė"));
+    poliklinika.pridetiDarbuotoja(new Administratorius("Saulė", "Miknaitė"));
+    poliklinika.pridetiDarbuotoja(new Administratorius("Emilija", "Grigonytė"));
+
+    // Laborantai (5)
+    poliklinika.pridetiDarbuotoja(new Laborantas("Tadas", "Urbšys"));
+    poliklinika.pridetiDarbuotoja(new Laborantas("Inga", "Jankauskien4"));
+    poliklinika.pridetiDarbuotoja(new Laborantas("Dainius", "Kalnietis"));
+    poliklinika.pridetiDarbuotoja(new Laborantas("Tomas", "Petraitis"));
+    poliklinika.pridetiDarbuotoja(new Laborantas("Rugilė", "Kazlauskaitė"));
+
+    // Valytojos (3)
+    poliklinika.pridetiDarbuotoja(new Valytoja("Rasa", "Petraitė"));
+    poliklinika.pridetiDarbuotoja(new Valytoja("Neringa", "Balčiūnaitė"));
+    poliklinika.pridetiDarbuotoja(new Valytoja("Laima", "Plieskytė"));
+ 
+
     // Pavyzdiniai pacientai
     poliklinika.pridetiPacienta(Pacientas("Petras", "Galvos skausmas"));
     poliklinika.pridetiPacienta(Pacientas("Ieva", "Kosulys"));
@@ -275,5 +453,26 @@ jgs  `=._`=./
     poliklinika.rodytiPacientus();
     poliklinika.priskirtiGydytojusPacientams();
 
-    return 0;
-}
+    // Atspausdinti darbuotojus
+    poliklinika.rodytiDarbuotojus();
+
+// Sukuriame finansus ir įrangą:
+Finansai finansai(1000.0);
+vector<Iranga> irangos = {
+    Iranga("Ultragarsas"),
+    Iranga("EKG"),
+    Iranga("Kraujospūdžio matuoklis")
+};
+
+// Naudojame įrangą:
+irangos[0].naudoti(5); // tarkime, praėjo 5 minutės
+
+// Įvyksta gedimas
+irangos[1].sugenda();
+
+// Patikriname balansą
+finansai.pridetiPajamu(150.0);
+finansai.sumazintiIslaidas(70.0);
+
+// Atlikti inspekciją su 2 neatitikimais
+Inspekcija::atliktiPatikra(finansai, 2);
