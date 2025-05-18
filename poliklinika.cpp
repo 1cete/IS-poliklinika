@@ -5,6 +5,88 @@
 
 using namespace std;
 
+void rodytiMeniu() {
+    std::cout << "\n _________________________________\n";
+    std::cout << "\n--- POLIKLINIKOS VALDYMO MENIU ---\n";
+    std::cout << "\n _________________________________\n";
+    std::cout << "1. Naujas pacientas\n";
+    std::cout << "2. Paslaugų kainos\n";
+    std::cout << "3. Paskirti gydytoją pacientui\n";
+    std::cout << "4. Darbuotojų ištekliai\n";
+    std::cout << "5. Įvykių sąrašas\n";
+    std::cout << "6. Priimti sprendimą dėl įvykio\n";
+    std::cout << "7. Pacientų rezultatai\n";
+    std::cout << "8. Darbuotojų sąrašas\n";
+    std::cout << "9. Prižiūrėti paciento gydymą\n";
+    std::cout << "10. Peržiūrėti pacientų pasitenkinimą\n";
+    std::cout << "11. Perkelti pacientą\n";
+    std::cout << "12. Valdyti finansus ir įrangą\n";
+    std::cout << "13. Reaguoti į inspekciją\n";
+    std::cout << "0. Išeiti iš žaidimo\n";
+    std::cout << "-----------------------------------\n";
+    std::cout << "Pasirinkite veiksmą (įveskite skaičių): ";
+
+}
+
+void pradetiZaidima() {
+    int pasirinkimas;
+    do {
+        rodytiMeniu();
+        std::cin >> pasirinkimas;
+
+        switch (pasirinkimas) {
+            case 1:
+                // registruotiPacienta();
+                break;
+            case 2:
+                // nustatytiPaslauguKainas();
+                break;
+            case 3:
+                // skubiaiPaskirtiGydytoja();
+                break;
+            case 4:
+                // valdytiDarbuotojus();
+                break;
+            case 5:
+                // matytiIvykius();
+                break;
+            case 6:
+                // sprendimasDelIvykio();
+                break;
+            case 7:
+                // perziuretiRezultatus();
+                break;
+            case 8:
+                // tvarkytiDarbuotojuSarasa();
+                break;
+            case 9:
+                // priziuretiGydymoProcesa();
+                break;
+            case 10:
+                // perziuretiPasitenkinima();
+                break;
+            case 11:
+                // perkeltiPacienta();
+                break;
+            case 12:
+                // valdytiFinansus();
+                break;
+            case 13:
+                // reaguotiIInspekcija();
+                break;
+            case 0:
+                std::cout << "Išeinama iš žaidimo. Ačiū, kad žaidėte!\n";
+                break;
+            default:
+                std::cout << "Neteisingas pasirinkimas. Bandykite dar kartą.\n";
+                break;
+        }
+    } while (pasirinkimas != 0);
+}
+
+//DABAR CIA VISUR REIKIA JAU APRASYTI KIEKVIENA PASIRINKIMA KLASE IDET IR SITAS KLASES APACIOJ IDET I KAZKURIAS/
+
+
 // Bazinė klasė Darbuotojas
 class Darbuotojas {
 protected:
@@ -126,8 +208,32 @@ public:
 };
 
 int main() {
+
+
     Poliklinika poliklinika;
     poliklinika.sveikinimas();
+
+
+    pradetiZaidima();
+
+
+     // ASCII menas
+    std::cout << R"(
+      .----. 
+       ===(_)==   LABA DIENA
+      // 6  6 \\  /
+      (    7   )
+       \ '--' /
+        \_ ._/
+       __)  (__
+    /"`/`\`V/`\`\
+   /   \  `Y _/_ \
+  / [DR]\_ |/ / /\
+  |     ( \/ / / /
+   \  \  \      /
+    \  `-/`  _.`
+jgs  `=._`=./
+    )" << std::endl;
 
     // Gydytojai su specializacijomis
     poliklinika.pridetiDarbuotoja(new Gydytojas("Jonas", "Kazlauskas", "Šeimos gydytojas"));
@@ -149,6 +255,7 @@ int main() {
     poliklinika.pridetiDarbuotoja(new Gydytojas("Indrė", "Sabaliauskaitė", "Ergoterapeutas"));
     poliklinika.pridetiDarbuotoja(new Gydytojas("Andrius", "Dirgėla", "Pulmonologas"));
     poliklinika.pridetiDarbuotoja(new Gydytojas("Ramunė", "Milinienė", "Radiologas"));
+
 
     // Slaugytojos (5)
     poliklinika.pridetiDarbuotoja(new Slaugytoja("Neringa", "Balčiūnaitė"));
