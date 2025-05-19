@@ -3,9 +3,13 @@
 #include <string>
 #include <iomanip>
 
+//REIK PRIDET FUNKCIJAS KIEKVIENAM ISVEDIME KUR PRADETI ZAIDIMA
+//NES PARASIUS SKAICIU TIK MENIU RODO
 using namespace std;
- 
-enum class GydymoBusena { //kas cia? nes tokio nesimokem su enum:DD //Nezinau kaip kitaip pakeisti:D
+
+//ok cia pasirodo paprastesnis rasymas nei keliu klasiu, tai paliekam.
+    //jei klaus kas cia, tai enum: leidzia turet aisku sarasa busenu
+enum GydymoBusena {
     LaukiaRegistracijos,
     LaukiaGydytojo,
     Apziurimas,
@@ -14,9 +18,10 @@ enum class GydymoBusena { //kas cia? nes tokio nesimokem su enum:DD //Nezinau ka
     Gydomas,
     Baigta
 };
-
+//cia konvertuojamas enum i teksta
 string busenaToString(GydymoBusena b) {
-    switch (b) {
+    switch (b) { //tikriname busena
+        //case leidzia vykdyti skirtingus veiksmus pagal reiksme
         case GydymoBusena::LaukiaRegistracijos: return "Laukia registracijos";
         case GydymoBusena::LaukiaGydytojo: return "Laukia gydytojo";
         case GydymoBusena::Apziurimas: return "Apžiūrimas";
@@ -27,27 +32,27 @@ string busenaToString(GydymoBusena b) {
         default: return "Nežinoma";
     }
 }
-
+//isvedame meniu i ekrana
 void rodytiMeniu() {
-    std::cout << "\n _________________________________\n";
-    std::cout << "\n--- POLIKLINIKOS VALDYMO MENIU ---\n";
-    std::cout << "\n _________________________________\n";
-    std::cout << "1. Naujas pacientas\n";
-    std::cout << "2. Paslaugų kainos\n";
-    std::cout << "3. Paskirti gydytoją pacientui\n";
-    std::cout << "4. Darbuotojų ištekliai\n";
-    std::cout << "5. Įvykių sąrašas\n";
-    std::cout << "6. Priimti sprendimą dėl įvykio\n";
-    std::cout << "7. Pacientų rezultatai\n";
-    std::cout << "8. Darbuotojų sąrašas\n";
-    std::cout << "9. Prižiūrėti paciento gydymą\n";
-    std::cout << "10. Peržiūrėti pacientų pasitenkinimą\n";
-    std::cout << "11. Perkelti pacientą\n";
-    std::cout << "12. Valdyti finansus ir įrangą\n";
-    std::cout << "13. Reaguoti į inspekciją\n";
-    std::cout << "0. Išeiti iš žaidimo\n";
-    std::cout << "-----------------------------------\n";
-    std::cout << "Pasirinkite veiksmą (įveskite skaičių): ";
+    cout << "\n _________________________________\n";
+    cout << "\n--- POLIKLINIKOS VALDYMO MENIU ---\n";
+    cout << "\n _________________________________\n";
+    cout << "1. Naujas pacientas\n";
+    cout << "2. Paslaugų kainos\n";
+    cout << "3. Paskirti gydytoją pacientui\n";
+    cout << "4. Darbuotojų ištekliai\n";
+    cout << "5. Įvykių sąrašas\n";
+    cout << "6. Priimti sprendimą dėl įvykio\n";
+    cout << "7. Pacientų rezultatai\n";
+    cout << "8. Darbuotojų sąrašas\n";
+    cout << "9. Prižiūrėti paciento gydymą\n";
+    cout << "10. Peržiūrėti pacientų pasitenkinimą\n";
+    cout << "11. Perkelti pacientą\n";
+    cout << "12. Valdyti finansus ir įrangą\n";
+    cout << "13. Reaguoti į inspekciją\n";
+    cout << "0. Išeiti iš žaidimo\n";
+    cout << "-----------------------------------\n";
+    cout << "Pasirinkite veiksmą (įveskite skaičių): ";
 
 }
 
@@ -107,61 +112,61 @@ void pradetiZaidima() {
     } while (pasirinkimas != 0);
 }
 
-//DABAR CIA VISUR REIKIA JAU APRASYTI KIEKVIENA PASIRINKIMA KLASE IDET IR SITAS KLASES APACIOJ IDET I KAZKURIAS/
-
 
 // Bazinė klasė Darbuotojas
 class Darbuotojas {
 private:
     static int nextID;              // ID generatorius
     int id;                        //darbuotojo ID
-    std::string vardas;
-    std::string pavarde;
-    std::string pareigos;
+    string vardas;
+    string pavarde;
+    string pareigos;
     bool uzimtas;
-    std::string elPastas;
-    std::vector<int> darboValandos; // Darbo valandos (pvz. nuo 8 iki 17)
+    string elPastas;
+    vector<int> darboValandos; // Darbo valandos (pvz. nuo 8 iki 17)
 public:
 // Konstruktorius su numatytais kontaktais ir darbo grafiku
     Darbuotojas(std::string v, std::string p, std::string par,
                 std::string email = "",
                 std::vector<int> grafikas = {8,9,10,11,12,13,14,15,16,17})
         : id(nextID++), vardas(std::move(v)), pavarde(std::move(p)), pareigos(std::move(par)),
-          uzimtas(false), elPastas(std::move(email)), darboValandos(std::move(grafikas)) {}
+          uzimtas(false), elPastas(std::move(email)), darboValandos(std::move(grafikas)) {} //reikia iki cia pakeisti nuo pirmu skliaustu
 
     // Virtualus destruktorius, jei paveldima klasė
     virtual ~Darbuotojas() = default;
 
-    // Getters
+    // Getteriai
     int getID() const { return id; }
-    const std::string& getVardas() const { return vardas; }
-    const std::string& getPavarde() const { return pavarde; }
-    const std::string& getPareigos() const { return pareigos; }
-    bool arUzimtas() const { return uzimtas; }
-    const std::string& getElPastas() const { return elPastas; }
-    const std::vector<int>& getDarboValandos() const { return darboValandos; }
-
+    const string& getVardas() const { return vardas; } 
+    const string& getPavarde() const { return pavarde; } 
+    const string& getPareigos() const { return pareigos; } 
+    bool arUzimtas() const { return uzimtas; } 
+    const string& getElPastas() const { return elPastas; } 
+    const vector<int>& getDarboValandos() const { return darboValandos; }
+    
     // Statuso keitimas
     void uzimti() { uzimtas = true; }
     void atlaisvinti() { uzimtas = false; }
 
-    // Tikriname ar darbuotojas dirba nurodytą valandą
     bool dirbaValanda(int valanda) const {
-        return std::find(darboValandos.begin(), darboValandos.end(), valanda) != darboValandos.end();
+    for (int v : darboValandos) {
+        if (v == valanda) {
+            return true;
+        }
     }
+    return false;
+}
 
     // Išvedame info apie darbuotoją
     virtual void info() const {
-        std::cout << std::left << std::setw(4) << id
-                  << std::setw(20) << (vardas + " " + pavarde)
-                  << std::setw(25) << pareigos
-                  << (uzimtas ? "Užimtas" : "Laisvas")
-                  << " | El. paštas: " << (elPastas.empty() ? "Nėra" : elPastas)
-                  << "\nDarbo valandos: ";
-        for (int val : darboValandos) {
-            std::cout << val << ":00 ";
-        }
-        std::cout << std::endl;
+        cout << left << setw(4) << id
+             << setw(20) << (vardas + " " + pavarde)
+             << setw(25) << pareigos
+             << (uzimtas ? "Užimtas" : "Laisvas")
+             << " | El. paštas: " << (elPastas.empty() ? "Nėra" : elPastas)
+             << "\nDarbo valandos: ";
+        for (int val : darboValandos) cout << val << ":00 ";
+        cout << endl;
     }
 };
 
@@ -170,55 +175,53 @@ int Darbuotojas::nextID = 1;
 
 // Paveldima klasė Gydytojas
 class Gydytojas : public Darbuotojas {
-    std::string specializacija;
-    std::vector<std::string> pacientuSarasas; 
+    string specializacija;
+    vector<string> pacientuSarasas; 
 
 public:
-    Gydytojas(std::string v, std::string p, std::string spec,
-              std::string email = "",
-              std::vector<int> grafikas = {8,9,10,11,12,13,14,15,16,17})
-        : Darbuotojas(std::move(v), std::move(p), "Gydytojas", std::move(email), std::move(grafikas)),
-          specializacija(std::move(spec)) {}
+   Gydytojas(const string& v, const string& p, const string& spec,
+              const string& email = "",
+              const vector<int>& grafikas = {8,9,10,11,12,13,14,15,16,17})
+        : Darbuotojas(v, p, "Gydytojas", email, grafikas), specializacija(spec) {}
 
     void pridetiPacienta(const std::string& pacientoVardas) {
         pacientuSarasas.push_back(pacientoVardas);
     }
 
-    void info() const override {
+    void info() const override { 
         Darbuotojas::info();
-        std::cout << "  Specializacija: " << specializacija << "\n";
-        std::cout << "  Pacientų skaičius: " << pacientuSarasas.size() << "\n";
+        cout << "  Specializacija: " << specializacija << "\n";
+        cout << "  Pacientų skaičius: " << pacientuSarasas.size() << "\n";
     }
 };
 
 // Paveldima klasė Slaugytoja
 class Slaugytoja : public Darbuotojas {
-   int prižiūrimųPacientųSkaičius = 0;
-
 public:
-    Slaugytoja(std::string v, std::string p,
-               std::string email = "",
-               std::vector<int> grafikas = {8,9,10,11,12,13,14,15,16,17})
-        : Darbuotojas(std::move(v), std::move(p), "Slaugytoja", std::move(email), std::move(grafikas)) {}
+int priziurimuPacientuSkaicius = 0;
+    Slaugytoja(const string& v, const string& p,
+               const string& email = "",
+               const vector<int>& grafikas = {8,9,10,11,12,13,14,15,16,17})
+        : Darbuotojas(v, p, "Slaugytoja", email, grafikas) {}
 
-    void pridetiPacienta() { prižiūrimųPacientųSkaičius++; }
+    void pridetiPacienta() { priziurimuPacientuSkaicius++; }
     void info() const override {
         Darbuotojas::info();
-        std::cout << "  Prižiūrimų pacientų skaičius: " << prižiūrimųPacientųSkaičius << "\n";
+        cout << "  Prižiūrimų pacientų skaičius: " << priziurimuPacientuSkaicius << "\n";
     }
 };
 
 // Paveldima klasė Administratorius
 class Administratorius : public Darbuotojas {
 public:
-    Administratorius(std::string v, std::string p,
-                     std::string email = "",
-                     std::vector<int> grafikas = {8,9,10,11,12,13,14,15,16,17})
-        : Darbuotojas(std::move(v), std::move(p), "Administratorius", std::move(email), std::move(grafikas)) {}
+    Administratorius(const string& v, const string& p,
+                     const string& email = "",
+                     const vector<int>& grafikas = {8,9,10,11,12,13,14,15,16,17})
+        : Darbuotojas(v, p, "Administratorius", email, grafikas) {}
 
     void registruotiPacienta() {
-        std::cout << vardas << " " << pavarde << " registruoja pacientą.\n";
-    }
+    cout << getVardas() << " " << getPavarde() << " registruoja pacientą.\n";
+}
 
     void info() const override {
         Darbuotojas::info();
@@ -226,39 +229,39 @@ public:
     }
 };
 
-// Pvaveldima klasė Laborantas
+// Paveldima klasė Laborantas
 class Laborantas : public Darbuotojas {
 public:
-    Laborantas(std::string v, std::string p,
-               std::string email = "",
-               std::vector<int> grafikas = {8,9,10,11,12,13,14,15,16,17})
-        : Darbuotojas(std::move(v), std::move(p), "Laborantas", std::move(email), std::move(grafikas)) {}
+    Laborantas(const string& v, const string& p,
+               const string& email = "",
+               const vector<int>& grafikas = {8,9,10,11,12,13,14,15,16,17})
+        : Darbuotojas(v, p, "Laborantas", email, grafikas) {}
 
     void atliktiTyrima() {
-        std::cout << vardas << " " << pavarde << " atlieka laboratorinius tyrimus.\n";
+        cout << getVardas() << " " << getPavarde() << " atlieka laboratorinius tyrimus.\n";
     }
 
     void info() const override {
         Darbuotojas::info();
-        std::cout << "  Atlieka laboratorinius tyrimus\n";
+        cout << "  Atlieka laboratorinius tyrimus\n";
     }
 };
 
 // Paveldima klasė Valytoja
 class Valytoja : public Darbuotojas {
 public:
-    Valytoja(std::string v, std::string p,
-             std::string email = "",
-             std::vector<int> grafikas = {8,9,10,11,12,13,14,15,16,17})
-        : Darbuotojas(std::move(v), std::move(p), "Valytoja", std::move(email), std::move(grafikas)) {}
+    Valytoja(const string& v, const string& p,
+             const string& email = "",
+             const vector<int>& grafikas = {8,9,10,11,12,13,14,15,16,17})
+        : Darbuotojas(v, p, "Valytoja", email, grafikas) {}
 
     void valyti() {
-        std::cout << vardas << " " << pavarde << " valo polikliniką.\n";
+        cout << getVardas() << " " << getPavarde() << " valo polikliniką.\n";
     }
 
     void info() const override {
         Darbuotojas::info();
-        std::cout << "  Atsakinga už poliklinikos švarą\n";
+        cout << "  Atsakinga už poliklinikos švarą\n";
     }
 };
 
@@ -270,7 +273,9 @@ class Pacientas {
     GydymoBusena busena;
     int likoLaikoBusenoje; // kiek dar laiko liko paciento busenoje (minutemis)
 public:
-    Pacientas(string v, string sb) : vardas(v), sveikatosBusena(sb), laukimoLaikas(0), busena(GydymoBusena::LaukiaRegistracijos), likoLaikoBusenoje(1) {}
+    Pacientas(const string& v, const string& sb)
+        : vardas(v), sveikatosBusena(sb), laukimoLaikas(0),
+          busena(GydymoBusena::LaukiaRegistracijos), likoLaikoBusenoje(1) {}
 
     void didintiLaukimoLaika() { laukimoLaikas++; }
 
@@ -315,9 +320,9 @@ public:
         }
     }
 
-    string getVardas() { return vardas; }
-    string getSveikatosBusena() { return sveikatosBusena; }
-    int getLaukimoLaikas() { return laukimoLaikas; }
+    string getVardas() const { return vardas; }
+    string getSveikatosBusena() const { return sveikatosBusena; }
+    int getLaukimoLaikas() const { return laukimoLaikas; }
     GydymoBusena getBusena() const { return busena; } 
 
     void info() const {
@@ -392,7 +397,7 @@ public:
     }
 
     void registruotiPacienta() {
-        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        cin.ignore(1000, '\n');
         string vardas, bukle;
         cout << "Įveskite paciento vardą: ";
         getline(cin, vardas);
@@ -486,50 +491,47 @@ jgs  `=._`=./
     )" << std::endl;
 
     // Gydytojai su specializacijomis
-    poliklinika.pridetiDarbuotoja(new Gydytojas("Jonas", "Kazlauskas", "Šeimos gydytojas"));
-    poliklinika.pridetiDarbuotoja(new Gydytojas("Rasa", "Petrauskienė", "Šeimos gydytojas"));
-    poliklinika.pridetiDarbuotoja(new Gydytojas("Agnė", "Vaitkutė", "Vaikų ligų gydytojas"));
-    poliklinika.pridetiDarbuotoja(new Gydytojas("Mindaugas", "Urbonas", "Akušeris ginekologas"));
-    poliklinika.pridetiDarbuotoja(new Gydytojas("Jurgita", "Stanevičiūtė", "Psichologas"));
-    poliklinika.pridetiDarbuotoja(new Gydytojas("Tomas", "Šalkauskis", "Kineziterapeutas"));
-    poliklinika.pridetiDarbuotoja(new Gydytojas("Simona", "Mažeikytė", "Oftalmologas"));
-    poliklinika.pridetiDarbuotoja(new Gydytojas("Vytautas", "Paškevičius", "Kardiologas"));
-    poliklinika.pridetiDarbuotoja(new Gydytojas("Rūta", "Marcinkevičienė", "Neurologas"));
-    poliklinika.pridetiDarbuotoja(new Gydytojas("Edita", "Jurkevičiūtė", "Dermatologas"));
-    poliklinika.pridetiDarbuotoja(new Gydytojas("Dainius", "Giedraitis", "Otorinolaringologas"));
-    poliklinika.pridetiDarbuotoja(new Gydytojas("Loreta", "Žukauskaitė", "Psichiatras"));
-    poliklinika.pridetiDarbuotoja(new Gydytojas("Justė", "Kuprevičiūtė", "Pediatras"));
-    poliklinika.pridetiDarbuotoja(new Gydytojas("Algis", "Tamkevičius", "Anesteziologas reanimatologas"));
-    poliklinika.pridetiDarbuotoja(new Gydytojas("Tautvydas", "Kairys", "Urologas"));
-    poliklinika.pridetiDarbuotoja(new Gydytojas("Monika", "Grigaitė", "Gastroenterologas"));
-    poliklinika.pridetiDarbuotoja(new Gydytojas("Indrė", "Sabaliauskaitė", "Ergoterapeutas"));
-    poliklinika.pridetiDarbuotoja(new Gydytojas("Andrius", "Dirgėla", "Pulmonologas"));
-    poliklinika.pridetiDarbuotoja(new Gydytojas("Ramunė", "Milinienė", "Radiologas"));
-
+    poliklinika.pridetiDarbuotoja(new Gydytojas("Jonas", "Kazlauskas", "Šeimos gydytojas", "jonas.kazlauskas@clinic.lt", {8,9,10,11,12}));
+    poliklinika.pridetiDarbuotoja(new Gydytojas("Rasa", "Petrauskienė", "Šeimos gydytojas", "rasa.petrauskiene@clinic.lt", {9,10,11,12,13,14}));
+    poliklinika.pridetiDarbuotoja(new Gydytojas("Agnė", "Vaitkutė", "Vaikų ligų gydytoja", "agne.vaitkute@clinic.lt", {8,9,10,11,12,13}));
+    poliklinika.pridetiDarbuotoja(new Gydytojas("Mindaugas", "Urbonas", "Akušeris ginekologas", "mindaugas.urbonas@clinic.lt", {10,11,12,13,14,15}));
+    poliklinika.pridetiDarbuotoja(new Gydytojas("Jurgita", "Stanevičiūtė", "Psichologė", "jurgita.staneviciute@clinic.lt", {9,10,11,12,13}));
+    poliklinika.pridetiDarbuotoja(new Gydytojas("Tomas", "Šalkauskis", "Kineziterapeutas", "tomas.salkauskis@clinic.lt", {8,9,10,11,12,13,14}));
+    poliklinika.pridetiDarbuotoja(new Gydytojas("Simona", "Mažeikytė", "Oftalmologė", "simona.mazeikyte@clinic.lt", {9,10,11,12,13}));
+    poliklinika.pridetiDarbuotoja(new Gydytojas("Vytautas", "Paškevičius", "Kardiologas", "vytautas.paskevicius@clinic.lt", {8,9,10,11,12,13}));
+    poliklinika.pridetiDarbuotoja(new Gydytojas("Rūta", "Marcinkevičienė", "Neurologė", "ruta.marcinkeviciene@clinic.lt", {9,10,11,12,13,14}));
+    poliklinika.pridetiDarbuotoja(new Gydytojas("Edita", "Jurkevičiūtė", "Dermatologė", "edita.jurkeviciute@clinic.lt", {8,9,10,11,12}));
+    poliklinika.pridetiDarbuotoja(new Gydytojas("Dainius", "Giedraitis", "Otorinolaringologas", "dainius.giedraitis@clinic.lt", {10,11,12,13,14,15}));
+    poliklinika.pridetiDarbuotoja(new Gydytojas("Loreta", "Žukauskaitė", "Psichiatrė", "loreta.zukauskaite@clinic.lt", {9,10,11,12,13}));
+    poliklinika.pridetiDarbuotoja(new Gydytojas("Justė", "Kuprevičiūtė", "Pediatrė", "juste.kupreviciute@clinic.lt", {8,9,10,11,12}));
+    poliklinika.pridetiDarbuotoja(new Gydytojas("Algis", "Tamkevičius", "Anesteziologas reanimatologas", "algis.tamkevicius@clinic.lt", {9,10,11,12,13,14}));
+    poliklinika.pridetiDarbuotoja(new Gydytojas("Tautvydas", "Kairys", "Urologas", "tautvydas.kairys@clinic.lt", {8,9,10,11,12}));
+    poliklinika.pridetiDarbuotoja(new Gydytojas("Monika", "Grigaitė", "Gastroenterologė", "monika.grigaite@clinic.lt", {9,10,11,12,13,14}));
+    poliklinika.pridetiDarbuotoja(new Gydytojas("Indrė", "Sabaliauskaitė", "Ergoterapeutė", "indre.sabaliauskaite@clinic.lt", {8,9,10,11,12}));
+    poliklinika.pridetiDarbuotoja(new Gydytojas("Andrius", "Dirgėla", "Pulmonologas", "andrius.dirgela@clinic.lt", {9,10,11,12,13}));
+    poliklinika.pridetiDarbuotoja(new Gydytojas("Ramunė", "Milinienė", "Radiologė", "ramune.miliniene@clinic.lt", {8,9,10,11,12}));
 
     // Slaugytojos (5)
-    poliklinika.pridetiDarbuotoja(new Slaugytoja("Neringa", "Balčiūnaitė"));
-    poliklinika.pridetiDarbuotoja(new Slaugytoja("Eglė", "Drungilaitė"));
-    poliklinika.pridetiDarbuotoja(new Slaugytoja("Asta", "Kalvaitienė"));
-    poliklinika.pridetiDarbuotoja(new Slaugytoja("Renata", "Kundrotienė"));
-    poliklinika.pridetiDarbuotoja(new Slaugytoja("Laima", "Navickaitė"));
+    poliklinika.pridetiDarbuotoja(new Slaugytoja("Neringa", "Balčiūnaitė", "neringa.balciunaite@clinic.lt", {8,9,10,11,12,13}));
+    poliklinika.pridetiDarbuotoja(new Slaugytoja("Eglė", "Drungilaitė", "egle.drungilaite@clinic.lt", {9,10,11,12,13,14}));
+    poliklinika.pridetiDarbuotoja(new Slaugytoja("Asta", "Kalvaitienė", "asta.kalvaitiene@clinic.lt", {8,9,10,11,12}));
+    poliklinika.pridetiDarbuotoja(new Slaugytoja("Renata", "Kundrotienė", "renata.kundrotiene@clinic.lt", {9,10,11,12,13}));
+    poliklinika.pridetiDarbuotoja(new Slaugytoja("Laima", "Navickaitė", "laima.navickaite@clinic.lt", {8,9,10,11}));
 
     // Administratoriai (3)
-    poliklinika.pridetiDarbuotoja(new Administratorius("Ieva", "Naveraitė"));
-    poliklinika.pridetiDarbuotoja(new Administratorius("Saulė", "Miknaitė"));
-    poliklinika.pridetiDarbuotoja(new Administratorius("Emilija", "Grigonytė"));
-
+    poliklinika.pridetiDarbuotoja(new Administratorius("Ieva", "Naveraitė", "ieva.naveraite@clinic.lt", {8,9,10,11,12}));
+    poliklinika.pridetiDarbuotoja(new Administratorius("Saulė", "Miknaitė", "saule.mikaite@clinic.lt", {9,10,11,12,13}));
+    poliklinika.pridetiDarbuotoja(new Administratorius("Emilija", "Grigonytė", "emilija.grigonyte@clinic.lt", {8,9,10,11}));
     // Laborantai (5)
-    poliklinika.pridetiDarbuotoja(new Laborantas("Tadas", "Urbšys"));
-    poliklinika.pridetiDarbuotoja(new Laborantas("Inga", "Jankauskien4"));
-    poliklinika.pridetiDarbuotoja(new Laborantas("Dainius", "Kalnietis"));
-    poliklinika.pridetiDarbuotoja(new Laborantas("Tomas", "Petraitis"));
-    poliklinika.pridetiDarbuotoja(new Laborantas("Rugilė", "Kazlauskaitė"));
-
+    poliklinika.pridetiDarbuotoja(new Laborantas("Tadas", "Urbšys", "tadas.urbsys@clinic.lt", {8,9,10,11,12}));
+    poliklinika.pridetiDarbuotoja(new Laborantas("Inga", "Jankauskienė", "inga.jankauskiene@clinic.lt", {9,10,11,12,13}));
+    poliklinika.pridetiDarbuotoja(new Laborantas("Dainius", "Kalnietis", "dainius.kalnietis@clinic.lt", {8,9,10,11,12,13}));
+    poliklinika.pridetiDarbuotoja(new Laborantas("Tomas", "Petraitis", "tomas.petraitis@clinic.lt", {9,10,11,12,13,14}));
+    poliklinika.pridetiDarbuotoja(new Laborantas("Rugilė", "Kazlauskaitė", "rugile.kazlauskaite@clinic.lt", {8,9,10,11}));
     // Valytojos (3)
-    poliklinika.pridetiDarbuotoja(new Valytoja("Rasa", "Petraitė"));
-    poliklinika.pridetiDarbuotoja(new Valytoja("Neringa", "Balčiūnaitė"));
-    poliklinika.pridetiDarbuotoja(new Valytoja("Laima", "Plieskytė"));
+    poliklinika.pridetiDarbuotoja(new Valytoja("Rasa", "Petraitė", "rasa.petraite@clinic.lt", {8,9,10,11}));
+    poliklinika.pridetiDarbuotoja(new Valytoja("Neringa", "Balčiūnaitė", "neringa.balciunaite@clinic.lt", {9,10,11,12}));
+    poliklinika.pridetiDarbuotoja(new Valytoja("Laima", "Plieskytė", "laima.plieskyte@clinic.lt", {8,9,10}));
  
 
     // Pavyzdiniai pacientai
@@ -543,26 +545,25 @@ jgs  `=._`=./
     poliklinika.rodytiPacientus();
     poliklinika.priskirtiGydytojusPacientams();
 
-    // Atspausdinti darbuotojus
+    // Atspausdinti darbuotojus ir pacientus
     poliklinika.rodytiDarbuotojus();
+    poliklinika.rodytiPacientus();
 
-// Sukuriame finansus ir įrangą:
-Finansai finansai(1000.0);
-vector<Iranga> irangos = {
-    Iranga("Ultragarsas"),
-    Iranga("EKG"),
-    Iranga("Kraujospūdžio matuoklis")
-};
+    // Priskirti gydytojus pacientams
+    poliklinika.priskirtiGydytojusPacientams();
 
-// Naudojame įrangą:
-irangos[0].naudoti(5); // tarkime, praėjo 5 minutės
+    // Finansai
+    Poliklinika::Finansai finansai(1000.0);
+    finansai.info();
+    finansai.pridetiPajamu(500.0);
+    finansai.sumazintiIslaidas(200.0);
 
-// Įvyksta gedimas
-irangos[1].sugenda();
+ // Inspekcija
+    Poliklinika::Inspekcija::atliktiPatikra(finansai, 2);
 
-// Patikriname balansą
-finansai.pridetiPajamu(150.0);
-finansai.sumazintiIslaidas(70.0);
+// Paleisti meniu
+    pradetiZaidima();
 
-// Atlikti inspekciją su 2 neatitikimais
-Inspekcija::atliktiPatikra(finansai, 2);
+    return 0;
+}
+
