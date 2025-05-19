@@ -5,7 +5,7 @@
 
 using namespace std;
  
-enum class GydymoBusena {
+enum class GydymoBusena { //kas cia? nes tokio nesimokem su enum:DD //Nezinau kaip kitaip pakeisti:D
     LaukiaRegistracijos,
     LaukiaGydytojo,
     Apziurimas,
@@ -119,57 +119,147 @@ private:
     std::string pavarde;
     std::string pareigos;
     bool uzimtas;
-    std::string telefonas;
     std::string elPastas;
     std::vector<int> darboValandos; // Darbo valandos (pvz. nuo 8 iki 17)
 public:
-    Darbuotojas(string v, string p, string par)
-        : vardas(v), pavarde(p), pareigos(par), uzimtas(false) {}
+// Konstruktorius su numatytais kontaktais ir darbo grafiku
+    Darbuotojas(std::string v, std::string p, std::string par,
+                std::string email = "",
+                std::vector<int> grafikas = {8,9,10,11,12,13,14,15,16,17})
+        : id(nextID++), vardas(std::move(v)), pavarde(std::move(p)), pareigos(std::move(par)),
+          uzimtas(false), elPastas(std::move(email)), darboValandos(std::move(grafikas)) {}
 
-    string getVardas() { return vardas; }
-    string getPavarde() { return pavarde; }
-    string getPareigos() { return pareigos; }
-    bool arUzimtas() { return uzimtas; }
+    // Virtualus destruktorius, jei paveldima klasė
+    virtual ~Darbuotojas() = default;
 
+    // Getters
+    int getID() const { return id; }
+    const std::string& getVardas() const { return vardas; }
+    const std::string& getPavarde() const { return pavarde; }
+    const std::string& getPareigos() const { return pareigos; }
+    bool arUzimtas() const { return uzimtas; }
+    const std::string& getElPastas() const { return elPastas; }
+    const std::vector<int>& getDarboValandos() const { return darboValandos; }
+
+    // Statuso keitimas
     void uzimti() { uzimtas = true; }
     void atlaisvinti() { uzimtas = false; }
 
-    virtual void info() {
-        cout << left << setw(25) << pareigos
-             << setw(20) << (vardas + " " + pavarde)
-             << (uzimtas ? "- uzimtas" : "- laisvas") << endl;
+    // Tikriname ar darbuotojas dirba nurodytą valandą
+    bool dirbaValanda(int valanda) const {
+        return std::find(darboValandos.begin(), darboValandos.end(), valanda) != darboValandos.end();
+    }
+
+    // Išvedame info apie darbuotoją
+    virtual void info() const {
+        std::cout << std::left << std::setw(4) << id
+                  << std::setw(20) << (vardas + " " + pavarde)
+                  << std::setw(25) << pareigos
+                  << (uzimtas ? "Užimtas" : "Laisvas")
+                  << " | El. paštas: " << (elPastas.empty() ? "Nėra" : elPastas)
+                  << "\nDarbo valandos: ";
+        for (int val : darboValandos) {
+            std::cout << val << ":00 ";
+        }
+        std::cout << std::endl;
     }
 };
 
+// Statinio lauko inicializacija (būtina kažkur .cpp faile, arba šalia klasės)
+int Darbuotojas::nextID = 1;
+
 // Paveldima klasė Gydytojas
 class Gydytojas : public Darbuotojas {
+    std::string specializacija;
+    std::vector<std::string> pacientuSarasas; 
+
 public:
-    Gydytojas(string v, string p, string specializacija)
-        : Darbuotojas(v, p, specializacija) {}
+    Gydytojas(std::string v, std::string p, std::string spec,
+              std::string email = "",
+              std::vector<int> grafikas = {8,9,10,11,12,13,14,15,16,17})
+        : Darbuotojas(std::move(v), std::move(p), "Gydytojas", std::move(email), std::move(grafikas)),
+          specializacija(std::move(spec)) {}
+
+    void pridetiPacienta(const std::string& pacientoVardas) {
+        pacientuSarasas.push_back(pacientoVardas);
+    }
+
+    void info() const override {
+        Darbuotojas::info();
+        std::cout << "  Specializacija: " << specializacija << "\n";
+        std::cout << "  Pacientų skaičius: " << pacientuSarasas.size() << "\n";
+    }
 };
 
 // Paveldima klasė Slaugytoja
 class Slaugytoja : public Darbuotojas {
+   int prižiūrimųPacientųSkaičius = 0;
+
 public:
-    Slaugytoja(string v, string p) : Darbuotojas(v, p, "Slaugytoja") {}
+    Slaugytoja(std::string v, std::string p,
+               std::string email = "",
+               std::vector<int> grafikas = {8,9,10,11,12,13,14,15,16,17})
+        : Darbuotojas(std::move(v), std::move(p), "Slaugytoja", std::move(email), std::move(grafikas)) {}
+
+    void pridetiPacienta() { prižiūrimųPacientųSkaičius++; }
+    void info() const override {
+        Darbuotojas::info();
+        std::cout << "  Prižiūrimų pacientų skaičius: " << prižiūrimųPacientųSkaičius << "\n";
+    }
 };
 
 // Paveldima klasė Administratorius
 class Administratorius : public Darbuotojas {
 public:
-    Administratorius(string v, string p) : Darbuotojas(v, p, "Administratorius") {}
+    Administratorius(std::string v, std::string p,
+                     std::string email = "",
+                     std::vector<int> grafikas = {8,9,10,11,12,13,14,15,16,17})
+        : Darbuotojas(std::move(v), std::move(p), "Administratorius", std::move(email), std::move(grafikas)) {}
+
+    void registruotiPacienta() {
+        std::cout << vardas << " " << pavarde << " registruoja pacientą.\n";
+    }
+
+    void info() const override {
+        Darbuotojas::info();
+        std::cout << "  Administruoja poliklinikos dokumentaciją ir registraciją\n";
+    }
 };
 
 // Pvaveldima klasė Laborantas
 class Laborantas : public Darbuotojas {
 public:
-    Laborantas(string v, string p) : Darbuotojas(v, p, "Laborantas") {}
+    Laborantas(std::string v, std::string p,
+               std::string email = "",
+               std::vector<int> grafikas = {8,9,10,11,12,13,14,15,16,17})
+        : Darbuotojas(std::move(v), std::move(p), "Laborantas", std::move(email), std::move(grafikas)) {}
+
+    void atliktiTyrima() {
+        std::cout << vardas << " " << pavarde << " atlieka laboratorinius tyrimus.\n";
+    }
+
+    void info() const override {
+        Darbuotojas::info();
+        std::cout << "  Atlieka laboratorinius tyrimus\n";
+    }
 };
 
 // Paveldima klasė Valytoja
 class Valytoja : public Darbuotojas {
 public:
-    Valytoja(string v, string p) : Darbuotojas(v, p, "Valytoja") {}
+    Valytoja(std::string v, std::string p,
+             std::string email = "",
+             std::vector<int> grafikas = {8,9,10,11,12,13,14,15,16,17})
+        : Darbuotojas(std::move(v), std::move(p), "Valytoja", std::move(email), std::move(grafikas)) {}
+
+    void valyti() {
+        std::cout << vardas << " " << pavarde << " valo polikliniką.\n";
+    }
+
+    void info() const override {
+        Darbuotojas::info();
+        std::cout << "  Atsakinga už poliklinikos švarą\n";
+    }
 };
 
 // Pacientas klasė
