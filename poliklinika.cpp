@@ -35,8 +35,8 @@ string busenaToString(GydymoBusena b) {
 //isvedame meniu i ekrana
 void rodytiMeniu() {
     cout << "\n _________________________________\n";
-    cout << "\n--- POLIKLINIKOS VALDYMO MENIU ---\n";
-    cout << "\n _________________________________\n";
+    cout << "  --- POLIKLINIKOS VALDYMO MENIU ---\n";
+    cout << "  _________________________________\n";
     cout << "1. Naujas pacientas\n";
     cout << "2. Paslaugų kainos\n";
     cout << "3. Paskirti gydytoją pacientui\n";
@@ -126,11 +126,11 @@ private:
     vector<int> darboValandos; // Darbo valandos (pvz. nuo 8 iki 17)
 public:
 // Konstruktorius su numatytais kontaktais ir darbo grafiku
-    Darbuotojas(std::string v, std::string p, std::string par,
-                std::string email = "",
-                std::vector<int> grafikas = {8,9,10,11,12,13,14,15,16,17})
-        : id(nextID++), vardas(std::move(v)), pavarde(std::move(p)), pareigos(std::move(par)),
-          uzimtas(false), elPastas(std::move(email)), darboValandos(std::move(grafikas)) {} //reikia iki cia pakeisti nuo pirmu skliaustu
+    Darbuotojas(string v, string p, string par,
+                string email = "",
+                vector<int> grafikas = {8,9,10,11,12,13,14,15,16,17})
+        : id(nextID++), vardas(move(v)), pavarde(move(p)), pareigos(move(par)),
+          uzimtas(false), elPastas(move(email)), darboValandos(move(grafikas)) {} //reikia iki cia pakeisti nuo pirmu skliaustu
 
     // Virtualus destruktorius, jei paveldima klasė
     virtual ~Darbuotojas() = default;
@@ -345,7 +345,21 @@ public:
     }
 
     void sveikinimas() {
-        cout << "=== Sveiki atvykę į Antakalnio polikliniką ===\n\n";
+        cout << "=== Sveiki atvykę į Antakalnio polikliniką ===\n";
+        cout << "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀" << endl;
+        cout << "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀" << endl;
+        cout << "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀ ⢠⣴⣶⣶⣶⣶⣶⣶⣶⣶⣶⣶⠶⠖⠲⠶⣶⣶⣶⣶⣶⣶⣶⣶⣶⣦⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀" << endl;
+        cout << "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀ ⢸⣿⣿⣿⣿⣿⣿⣿⣿⣿⡟⠁  ⣶⣶⠀⠈⢻⣿⣿⣿⣿⣿⣿⣿⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀" << endl;
+        cout << "⠀⠀⠀⣀⣀⣀⣀⣀⣀⣀⡀⠀ ⢸⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇⢸⣿⣿⣿⣿⡇⢸⣿⣿⣿⣿⣿⣿⣿⣿⡇⠀⠀ ⢀⢀⣀⣀⣀⣀⣀⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀" << endl;
+        cout << "⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⡇⠀⠀⢸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣧⡀⠀⠿⠿⠀⢀⣼⣿⣿⣿⣿⣿⣿⣿⣿⡇⠀ ⠀⢸⣿⣿⣿⣿⣿⣿⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀" << endl;
+        cout << "⠀⠀⠀⣿⣇⣀⣿⣀⣸⣸⡇⠀⠀⢸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣶⣶⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇⠀⠀ ⣿⣿⣀⣸⣇⣀⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀" << endl;
+        cout << "⠀⠀⠀⣿⡏⠉⣿⠉⢹⡏⠁⠀⠀⢸⣿⣿⣿⣿ Antakalnio Poliklinika⣿⣿⣿⣿⡇     ⣿⠉⢹⡏⠉⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀" << endl;
+        cout << "⠀⠀⠀⣿⡟⠛⣿⠛⢻⡇⠀⠀⠀⢸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡟⠿⠿⠿⠿⢻⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇⠀⠀ ⢸⣿⠛⢻⡟⠛⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀" << endl;
+        cout << "⠀⠀⠀⣿⣧⣴⣿⣤⣾⡇⠀⠀⠀⢸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇⠀⠀⠀⠀ ⢸⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇⠀  ⢸⣿⣤⣾⣧⣴⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀" << endl;
+        cout << "⠀⠀⠀⣿⣿⣿⣿⣿⣿⡇⠀⠀⠀⢸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇⠀⠀⠀⠀ ⢸⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇⠀⠀ ⢸⣿⣿⣿⣿⣿⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀" << endl;
+        cout << "⣤⣤ ⣿⣿⣿⣿⣿⣿⣧⣤⣤⣼⣿⣿⠿⠿⠿⠿⠿⠿⠿⣿⣧⣤⣤⣤⣤⣼⣿⣿⠿⠿⠿⠿⠿⠿⣿⣿⣧⣤⣤⣼⣿⣿⣿⣿⣿⣿⣧⣤⣤⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀" << endl;
+        cout << "⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀" << endl;
+        cout << "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀" << endl;
     }
 
     void pridetiDarbuotoja(Darbuotojas* d) {
