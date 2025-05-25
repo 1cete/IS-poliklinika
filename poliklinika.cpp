@@ -2,6 +2,8 @@
 #include <vector>
 #include <string>
 #include <iomanip>
+#include <cstdlib>
+#include <ctime>
 
 //REIK PRIDET FUNKCIJAS KIEKVIENAM ISVEDIME KUR PRADETI ZAIDIMA
 //NES PARASIUS SKAICIU TIK MENIU RODO
@@ -56,57 +58,78 @@ void rodytiMeniu() {
 
 }
 
-void pradetiZaidima() {
+void pradetiZaidima(Poliklinika& poliklinika) {
     int pasirinkimas;
+    Poliklinika::Finansai finansai(1000.0); // pradinis balansas
+
     do {
         rodytiMeniu();
-        std::cin >> pasirinkimas;
+        cin >> pasirinkimas;
 
         switch (pasirinkimas) {
             case 1:
-                // registruotiPacienta();
+                poliklinika.registruotiPacienta();
                 break;
             case 2:
-                // nustatytiPaslauguKainas();
+                cout << "\nPaslaugų kainos:\n"
+                     << "- Konsultacija: 20 EUR\n"
+                     << "- Tyrimai: 30 EUR\n"
+                     << "- Gydymas: 50 EUR\n\n";
                 break;
             case 3:
-                // skubiaiPaskirtiGydytoja();
+                poliklinika.priskirtiGydytojusPacientams();
                 break;
             case 4:
-                // valdytiDarbuotojus();
+                poliklinika.rodytiDarbuotojus();
                 break;
             case 5:
-                // matytiIvykius();
+                cout << "\nĮvykiai:\n- Sutriko elektros tiekimas\n- Trūksta reagentų laboratorijoje\n- Atėjo netikėta inspekcija\n\n";
                 break;
-            case 6:
-                // sprendimasDelIvykio();
+            case 6: {
+                int sprendimas;
+                cout << "Sprendimo simuliacija: pasirinkite 1 (spręsti) arba 2 (ignoruoti): ";
+                cin >> sprendimas;
+                if (sprendimas == 1) {
+                    cout << "Sprendimas priimtas – problema išspręsta!\n";
+                    finansai.sumazintiIslaidas(100.0);
+                } else {
+                    cout << "Ignoruota – gali kilti pasekmių!\n";
+                }
                 break;
+            }
             case 7:
-                // perziuretiRezultatus();
+                poliklinika.simuliuotiMinute();
+                poliklinika.rodytiPacientuBusena();
                 break;
             case 8:
-                // tvarkytiDarbuotojuSarasa();
+                poliklinika.rodytiDarbuotojus();
                 break;
             case 9:
-                // priziuretiGydymoProcesa();
+                cout << "\nSimuliuojamas gydymo procesas 1 minutę...\n";
+                poliklinika.simuliuotiMinute();
                 break;
             case 10:
-                // perziuretiPasitenkinima();
+                cout << "\nPacientų pasitenkinimo apklausa:\n";
+                cout << "- 80% pacientų patenkinti\n";
+                cout << "- 15% vidutiniškai\n";
+                cout << "- 5% nepatenkinti\n\n";
                 break;
             case 11:
-                // perkeltiPacienta();
+                cout << "Perkėlimas simuliuojamas... Pacientas perkeltas į kitą skyrių.\n";
                 break;
             case 12:
-                // valdytiFinansus();
+                finansai.info();
+                finansai.pridetiPajamu(300);
+                finansai.sumazintiIslaidas(150);
                 break;
             case 13:
-                // reaguotiIInspekcija();
+                Poliklinika::Inspekcija::atliktiPatikra(finansai, rand() % 4); // random 0–3 neatitikimų
                 break;
             case 0:
-                std::cout << "Išeinama iš žaidimo. Ačiū, kad žaidėte!\n";
+                cout << "Išeinama iš žaidimo. Ačiū, kad žaidėte!\n";
                 break;
             default:
-                std::cout << "Neteisingas pasirinkimas. Bandykite dar kartą.\n";
+                cout << "Neteisingas pasirinkimas. Bandykite dar kartą.\n";
                 break;
         }
     } while (pasirinkimas != 0);
@@ -478,13 +501,10 @@ public:
 
 int main() {
 
+ srand(time(0)); // dėl atsitiktinių skaičių inspekcijai
 
     Poliklinika poliklinika;
     poliklinika.sveikinimas();
-
-
-    pradetiZaidima();
-
 
      // ASCII menas
     std::cout << R"(
@@ -567,7 +587,8 @@ jgs  `=._`=./
     poliklinika.priskirtiGydytojusPacientams();
 
     // Finansai
-    Poliklinika::Finansai finansai(1000.0);
+    Finansai finansai(1000.0);
+    Inspekcija::atliktiPatikra(finansai, 2);
     finansai.info();
     finansai.pridetiPajamu(500.0);
     finansai.sumazintiIslaidas(200.0);
@@ -576,7 +597,7 @@ jgs  `=._`=./
     Poliklinika::Inspekcija::atliktiPatikra(finansai, 2);
 
 // Paleisti meniu
-    pradetiZaidima();
+    pradetiZaidima(poliklinika);
 
     return 0;
 }
