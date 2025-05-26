@@ -58,82 +58,6 @@ void rodytiMeniu() {
 
 }
 
-void pradetiZaidima(Poliklinika& poliklinika) {
-    int pasirinkimas;
-    Poliklinika::Finansai finansai(1000.0); // pradinis balansas
-
-    do {
-        rodytiMeniu();
-        cin >> pasirinkimas;
-
-        switch (pasirinkimas) {
-            case 1:
-                poliklinika.registruotiPacienta();
-                break;
-            case 2:
-                cout << "\nPaslaugų kainos:\n"
-                     << "- Konsultacija: 20 EUR\n"
-                     << "- Tyrimai: 30 EUR\n"
-                     << "- Gydymas: 50 EUR\n\n";
-                break;
-            case 3:
-                poliklinika.priskirtiGydytojusPacientams();
-                break;
-            case 4:
-                poliklinika.rodytiDarbuotojus();
-                break;
-            case 5:
-                cout << "\nĮvykiai:\n- Sutriko elektros tiekimas\n- Trūksta reagentų laboratorijoje\n- Atėjo netikėta inspekcija\n\n";
-                break;
-            case 6: {
-                int sprendimas;
-                cout << "Sprendimo simuliacija: pasirinkite 1 (spręsti) arba 2 (ignoruoti): ";
-                cin >> sprendimas;
-                if (sprendimas == 1) {
-                    cout << "Sprendimas priimtas – problema išspręsta!\n";
-                    finansai.sumazintiIslaidas(100.0);
-                } else {
-                    cout << "Ignoruota – gali kilti pasekmių!\n";
-                }
-                break;
-            }
-            case 7:
-                poliklinika.simuliuotiMinute();
-                poliklinika.rodytiPacientuBusena();
-                break;
-            case 8:
-                poliklinika.rodytiDarbuotojus();
-                break;
-            case 9:
-                cout << "\nSimuliuojamas gydymo procesas 1 minutę...\n";
-                poliklinika.simuliuotiMinute();
-                break;
-            case 10:
-                cout << "\nPacientų pasitenkinimo apklausa:\n";
-                cout << "- 80% pacientų patenkinti\n";
-                cout << "- 15% vidutiniškai\n";
-                cout << "- 5% nepatenkinti\n\n";
-                break;
-            case 11:
-                cout << "Perkėlimas simuliuojamas... Pacientas perkeltas į kitą skyrių.\n";
-                break;
-            case 12:
-                finansai.info();
-                finansai.pridetiPajamu(300);
-                finansai.sumazintiIslaidas(150);
-                break;
-            case 13:
-                Poliklinika::Inspekcija::atliktiPatikra(finansai, rand() % 4); // random 0–3 neatitikimų
-                break;
-            case 0:
-                cout << "Išeinama iš žaidimo. Ačiū, kad žaidėte!\n";
-                break;
-            default:
-                cout << "Neteisingas pasirinkimas. Bandykite dar kartą.\n";
-                break;
-        }
-    } while (pasirinkimas != 0);
-}
 
 
 // Bazinė klasė Darbuotojas
@@ -456,6 +380,7 @@ public:
     }
 }
 
+
     // Paveldima klasė Finansai
     class Finansai {
     double balansas;
@@ -498,6 +423,83 @@ public:
 };
 
 };
+
+void pradetiZaidima(Poliklinika& poliklinika) {
+    int pasirinkimas;
+    Poliklinika::Finansai finansai(1000.0); // pradinis balansas
+
+    do {
+        rodytiMeniu();
+        cin >> pasirinkimas;
+
+        switch (pasirinkimas) {
+            case 1:
+                poliklinika.registruotiPacienta();
+                break;
+            case 2:
+                cout << "\nPaslaugų kainos:\n"
+                     << "- Konsultacija: 20 EUR\n"
+                     << "- Tyrimai: 30 EUR\n"
+                     << "- Gydymas: 50 EUR\n\n";
+                break;
+            case 3:
+                poliklinika.priskirtiGydytojusPacientams();
+                break;
+            case 4:
+                poliklinika.rodytiDarbuotojus();
+                break;
+            case 5:
+                cout << "\nĮvykiai:\n- Sutriko elektros tiekimas\n- Trūksta reagentų laboratorijoje\n- Atėjo netikėta inspekcija\n\n";
+                break;
+            case 6: {
+                int sprendimas;
+                cout << "Sprendimo simuliacija: pasirinkite 1 (spręsti) arba 2 (ignoruoti): ";
+                cin >> sprendimas;
+                if (sprendimas == 1) {
+                    cout << "Sprendimas priimtas – problema išspręsta!\n";
+                    finansai.sumazintiIslaidas(100.0);
+                } else {
+                    cout << "Ignoruota – gali kilti pasekmių!\n";
+                }
+                break;
+            }
+            case 7:
+                poliklinika.simuliuotiMinute();
+                poliklinika.rodytiPacientuBusena();
+                break;
+            case 8:
+                poliklinika.rodytiDarbuotojus();
+                break;
+            case 9:
+                cout << "\nSimuliuojamas gydymo procesas 1 minutę...\n";
+                poliklinika.simuliuotiMinute();
+                break;
+            case 10:
+                cout << "\nPacientų pasitenkinimo apklausa:\n";
+                cout << "- 80% pacientų patenkinti\n";
+                cout << "- 15% vidutiniškai\n";
+                cout << "- 5% nepatenkinti\n\n";
+                break;
+            case 11:
+                cout << "Perkėlimas simuliuojamas... Pacientas perkeltas į kitą skyrių.\n";
+                break;
+            case 12:
+                finansai.info();
+                finansai.pridetiPajamu(300);
+                finansai.sumazintiIslaidas(150);
+                break;
+            case 13:
+                Poliklinika::Inspekcija::atliktiPatikra(finansai, rand() % 4); // random 0–3 neatitikimų
+                break;
+            case 0:
+                cout << "Išeinama iš žaidimo. Ačiū, kad žaidėte!\n";
+                break;
+            default:
+                cout << "Neteisingas pasirinkimas. Bandykite dar kartą.\n";
+                break;
+        }
+    } while (pasirinkimas != 0);
+}
 
 int main() {
 
@@ -587,8 +589,8 @@ jgs  `=._`=./
     poliklinika.priskirtiGydytojusPacientams();
 
     // Finansai
-    Finansai finansai(1000.0);
-    Inspekcija::atliktiPatikra(finansai, 2);
+    Poliklinika::Finansai finansai(1000.0);
+    Poliklinika::Inspekcija::atliktiPatikra(finansai, 2);
     finansai.info();
     finansai.pridetiPajamu(500.0);
     finansai.sumazintiIslaidas(200.0);
@@ -601,4 +603,3 @@ jgs  `=._`=./
 
     return 0;
 }
-
