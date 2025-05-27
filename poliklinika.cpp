@@ -4,9 +4,8 @@
 #include <iomanip>
 #include <cstdlib>
 #include <ctime>
+#include <limits>  
 
-//REIK PRIDET FUNKCIJAS KIEKVIENAM ISVEDIME KUR PRADETI ZAIDIMA
-//NES PARASIUS SKAICIU TIK MENIU RODO
 using namespace std;
 
 //ok cia pasirodo paprastesnis rasymas nei keliu klasiu, tai paliekam.
@@ -282,6 +281,47 @@ public:
     }
 };
 
+ // Paveldima klasė Finansai
+    class Finansai {
+    double balansas;
+public:
+    Finansai(double pradinis) : balansas(pradinis) {}
+
+    void pridetiPajamu(double suma) {
+        balansas += suma;
+        cout << "Pridėta pajamų: " << suma << " EUR. Naujas balansas: " << balansas << " EUR.\n";
+    }
+
+    void sumazintiIslaidas(double suma) {
+        balansas -= suma;
+        cout << "Išlaidos: " << suma << " EUR. Naujas balansas: " << balansas << " EUR.\n";
+    }
+
+    double gautiBalansa() const {
+        return balansas;
+    }
+
+    void info() const {
+        cout << "Poliklinikos balansas: " << balansas << " EUR\n";
+    }
+};
+
+// Klasė Inspekcija
+class Inspekcija {
+public:
+    static void atliktiPatikra(Finansai& finansai, int neatitikimuSkaicius) {
+        cout << "Vykdoma inspekcija...\n";
+        if (neatitikimuSkaicius > 0) {
+            double bauda = neatitikimuSkaicius * 50.0;
+            cout << "Rasta neatitikimų: " << neatitikimuSkaicius 
+                 << ". Skiriama bauda: " << bauda << " EUR.\n";
+            finansai.sumazintiIslaidas(bauda);
+        } else {
+            cout << "Poliklinika atitiko visus reikalavimus. Baudų nėra.\n";
+        }
+    }
+};
+
 // Poliklinika klasė
 class Poliklinika {
     vector<Darbuotojas*> darbuotojai;
@@ -380,57 +420,34 @@ public:
     }
 }
 
-
-    // Paveldima klasė Finansai
-    class Finansai {
-    double balansas;
-public:
-    Finansai(double pradinis) : balansas(pradinis) {}
-
-    void pridetiPajamu(double suma) {
-        balansas += suma;
-        cout << "Pridėta pajamų: " << suma << " EUR. Naujas balansas: " << balansas << " EUR.\n";
-    }
-
-    void sumazintiIslaidas(double suma) {
-        balansas -= suma;
-        cout << "Išlaidos: " << suma << " EUR. Naujas balansas: " << balansas << " EUR.\n";
-    }
-
-    double gautiBalansa() const {
-        return balansas;
-    }
-
-    void info() const {
-        cout << "Poliklinikos balansas: " << balansas << " EUR\n";
-    }
 };
 
-// Klasė Inspekcija
-class Inspekcija {
-public:
-    static void atliktiPatikra(Finansai& finansai, int neatitikimuSkaicius) {
-        cout << "Vykdoma inspekcija...\n";
-        if (neatitikimuSkaicius > 0) {
-            double bauda = neatitikimuSkaicius * 50.0;
-            cout << "Rasta neatitikimų: " << neatitikimuSkaicius 
-                 << ". Skiriama bauda: " << bauda << " EUR.\n";
-            finansai.sumazintiIslaidas(bauda);
-        } else {
-            cout << "Poliklinika atitiko visus reikalavimus. Baudų nėra.\n";
+// Saugus pasirinkimo nuskaitymas iš meniu
+int gautiPasirinkima() {
+    int pasirinkimas;
+
+    while (true) {
+        rodytiMeniu();
+
+        if (!(cin >> pasirinkimas)) {
+            cout << "Klaidinga įvestis, įveskite skaičių.\n";
+            cin.clear(); // išvalome klaidos būseną
+            cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // išvalome buferį
+            continue; // bandome dar kartą
         }
-    }
-};
 
-};
+        // Išvalome buferį po įvesto skaičiaus
+        cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        return pasirinkimas;
+    }
+}
 
 void pradetiZaidima(Poliklinika& poliklinika) {
     int pasirinkimas;
-    Poliklinika::Finansai finansai(1000.0); // pradinis balansas
+    Finansai finansai(1000.0); // pradinis balansas
 
     do {
-        rodytiMeniu();
-        cin >> pasirinkimas;
+        pasirinkimas = gautiPasirinkima();
 
         switch (pasirinkimas) {
             case 1:
@@ -454,7 +471,14 @@ void pradetiZaidima(Poliklinika& poliklinika) {
             case 6: {
                 int sprendimas;
                 cout << "Sprendimo simuliacija: pasirinkite 1 (spręsti) arba 2 (ignoruoti): ";
-                cin >> sprendimas;
+                if (!(cin >> sprendimas)) {
+                    cout << "Klaidinga įvestis. Grįžtama į meniu.\n";
+                    cin.clear();
+                    cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                    break;
+                }
+                cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
                 if (sprendimas == 1) {
                     cout << "Sprendimas priimtas – problema išspręsta!\n";
                     finansai.sumazintiIslaidas(100.0);
@@ -489,7 +513,7 @@ void pradetiZaidima(Poliklinika& poliklinika) {
                 finansai.sumazintiIslaidas(150);
                 break;
             case 13:
-                Poliklinika::Inspekcija::atliktiPatikra(finansai, rand() % 4); // random 0–3 neatitikimų
+                Inspekcija::atliktiPatikra(finansai, rand() % 4); // random 0–3 neatitikimų
                 break;
             case 0:
                 cout << "Išeinama iš žaidimo. Ačiū, kad žaidėte!\n";
@@ -577,28 +601,7 @@ jgs  `=._`=./
     poliklinika.pridetiPacienta(Pacientas("Greta", "Alergija"));
     poliklinika.pridetiPacienta(Pacientas("Martynas", "Akių paraudimas"));
 
-    poliklinika.rodytiDarbuotojus();
-    poliklinika.rodytiPacientus();
-    poliklinika.priskirtiGydytojusPacientams();
-
-    // Atspausdinti darbuotojus ir pacientus
-    poliklinika.rodytiDarbuotojus();
-    poliklinika.rodytiPacientus();
-
-    // Priskirti gydytojus pacientams
-    poliklinika.priskirtiGydytojusPacientams();
-
-    // Finansai
-    Poliklinika::Finansai finansai(1000.0);
-    Poliklinika::Inspekcija::atliktiPatikra(finansai, 2);
-    finansai.info();
-    finansai.pridetiPajamu(500.0);
-    finansai.sumazintiIslaidas(200.0);
-
- // Inspekcija
-    Poliklinika::Inspekcija::atliktiPatikra(finansai, 2);
-
-// Paleisti meniu
+    // Paleisti meniu
     pradetiZaidima(poliklinika);
 
     return 0;
