@@ -683,7 +683,7 @@ int main() {
     // Pavyzdiniai pacientai
     poliklinika.pridetiPacienta(Pacientas("Petras", "Galvos skausmas"));
     poliklinika.pridetiPacienta(Pacientas("Ieva", "Gyvas svirplys ausyje"));
-    poliklinika.pridetiPacienta(Pacientas("Lukas", "Aortos disekacija"));
+    poliklinika.pridetiPacienta(Pacientas("Lukas", "Reumatinis vaskulitas"));
     poliklinika.pridetiPacienta(Pacientas("Greta", "Šakutė gerklėje"));
     poliklinika.pridetiPacienta(Pacientas("Martynas", "Meningitas"));
 
