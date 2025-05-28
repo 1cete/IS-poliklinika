@@ -35,9 +35,8 @@ string busenaToString(GydymoBusena b) {
 }
 //isvedame meniu i ekrana
 void rodytiMeniu() {
-    cout << "\n                                  \n";
     cout << "\n _________________________________\n";
-    cout << " --- POLIKLINIKOS VALDYMO MENIU ---\n";
+    cout << " --- POLIKLINIKOS VALDYMO MENIU ---";
     cout << " _________________________________\n";
     cout << "1. Naujas pacientas\n";
     cout << "2. Paslaugų kainos\n";
@@ -333,6 +332,7 @@ public:
     }
 
     void sveikinimas() {
+        cout << " \n                                                                              \n";
         cout << "            === Sveiki atvykę į Antakalnio polikliniką ===                       \n";
         cout << "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀                        ⠀⠀" << endl;
         cout << "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀                        " << endl;
