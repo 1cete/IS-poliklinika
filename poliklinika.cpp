@@ -35,9 +35,10 @@ string busenaToString(GydymoBusena b) {
 }
 //isvedame meniu i ekrana
 void rodytiMeniu() {
+    cout << "\n                                  \n";
     cout << "\n _________________________________\n";
-    cout << "  --- POLIKLINIKOS VALDYMO MENIU ---\n";
-    cout << "  _________________________________\n";
+    cout << " --- POLIKLINIKOS VALDYMO MENIU ---\n";
+    cout << " _________________________________\n";
     cout << "1. Naujas pacientas\n";
     cout << "2. Paslaugų kainos\n";
     cout << "3. Paskirti gydytoją pacientui\n";
