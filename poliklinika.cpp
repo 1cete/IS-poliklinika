@@ -33,6 +33,27 @@ string busenaToString(GydymoBusena b) {
         default: return "Nežinoma";
     }
 }
+//skyrius nustatom
+string gautiSkyriuPagalBusena(GydymoBusena busena) {
+    switch (busena) {
+        case GydymoBusena::LaukiaRegistracijos:
+            return "Registratūra";
+        case GydymoBusena::LaukiaGydytojo:
+            return "Laukiamojo skyrius";
+        case GydymoBusena::Apziurimas:
+            return "Gydytojo kabinetas";
+        case GydymoBusena::TyrimuLaukimas:
+            return "Laboratorija";
+        case GydymoBusena::LaukiaRezultatu:
+            return "Rezultatų skyrius";
+        case GydymoBusena::Gydomas:
+            return "Gydymo skyrius";
+        case GydymoBusena::Baigta:
+            return "Išrašymas";
+        default:
+            return "Nežinomas skyrius";
+    }
+}
 //isvedame meniu i ekrana
 void rodytiMeniu() {
     cout << "\n --------------------------------\n";
@@ -46,11 +67,10 @@ void rodytiMeniu() {
     cout << "6. Priimti sprendimą dėl įvykio\n";
     cout << "7. Pacientų rezultatai\n";
     cout << "8. Darbuotojų sąrašas\n";
-    cout << "9. Prižiūrėti paciento gydymą\n";
-    cout << "10. Peržiūrėti pacientų pasitenkinimą\n";
-    cout << "11. Perkelti pacientą\n";
-    cout << "12. Valdyti finansus ir įrangą\n";
-    cout << "13. Reaguoti į inspekciją\n";
+    cout << "9. Peržiūrėti pacientų pasitenkinimą\n";
+    cout << "10. Perkelti pacientą\n";
+    cout << "11. Valdyti finansus ir įrangą\n";
+    cout << "12. Reaguoti į inspekciją\n";
     cout << "0. Išeiti iš žaidimo\n";
     cout << "-----------------------------------\n";
     cout << "Pasirinkite veiksmą (įveskite skaičių): ";
@@ -232,6 +252,44 @@ public:
     string getSkyrius() const {
         return skyrius;
     }
+
+    void atnaujintiSkyriuPagalBusena() {
+        skyrius = gautiSkyriuPagalBusena(busena);
+    }
+
+    void pereitiIKitaBusena() {
+        switch (busena) {
+            case GydymoBusena::LaukiaRegistracijos:
+                busena = GydymoBusena::LaukiaGydytojo;
+                likoLaikoBusenoje = 2;
+                break;
+            case GydymoBusena::LaukiaGydytojo:
+                busena = GydymoBusena::Apziurimas;
+                likoLaikoBusenoje = 5;
+                break;
+            case GydymoBusena::Apziurimas:
+                busena = GydymoBusena::TyrimuLaukimas;
+                likoLaikoBusenoje = 4;
+                break;
+            case GydymoBusena::TyrimuLaukimas:
+                busena = GydymoBusena::LaukiaRezultatu;
+                likoLaikoBusenoje = 3;
+                break;
+            case GydymoBusena::LaukiaRezultatu:
+                busena = GydymoBusena::Gydomas;
+                likoLaikoBusenoje = 4;
+                break;
+            case GydymoBusena::Gydomas:
+                busena = GydymoBusena::Baigta;
+                likoLaikoBusenoje = 0;
+                break;
+            case GydymoBusena::Baigta:
+                // jau baigta, nekeičiam
+                break;
+        }
+        atnaujintiSkyriuPagalBusena(); // atnaujinam skyrių po būsenos pasikeitimo
+    }
+};
 
     void didintiLaukimoLaika() { laukimoLaikas++; }
 
@@ -562,24 +620,20 @@ void pradetiZaidima(Poliklinika& poliklinika) {
                 poliklinika.rodytiDarbuotojus();
                 break;
             case 9:
-                cout << "\nSimuliuojamas gydymo procesas 1 minutę...\n";
-                poliklinika.simuliuotiMinute();
-                break;
-            case 10:
                 cout << "\nPacientų pasitenkinimo apklausa:\n";
                 cout << "- 80% pacientų patenkinti\n";
                 cout << "- 15% vidutiniškai\n";
                 cout << "- 5% nepatenkinti\n\n";
                 break;
-            case 11:
+            case 10:
                 poliklinika.perkeltiPacientaISkyriu();
                 break;
-            case 12:
+            case 11:
                 finansai.info();
                 finansai.pridetiPajamu(300);
                 finansai.sumazintiIslaidas(150);
                 break;
-            case 13:
+            case 12:
                 Inspekcija::atliktiPatikra(finansai, rand() % 4); // random 0–3 neatitikimų
                 break;
             case 0:
