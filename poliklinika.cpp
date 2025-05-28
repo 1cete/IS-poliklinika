@@ -452,6 +452,8 @@ void pradetiZaidima(Poliklinika& poliklinika) {
         switch (pasirinkimas) {
             case 1:
                 poliklinika.registruotiPacienta();
+                cout << "\n--- Pacientų sąrašas po registracijos ---\n";
+                poliklinika.rodytiPacientus(); // <-- tai parodys naujai pridėtą pacientą
                 break;
             case 2:
                 cout << "\nPaslaugų kainos:\n"
