@@ -239,12 +239,12 @@ class Pacientas {
     GydymoBusena busena;
     int likoLaikoBusenoje; // kiek dar laiko liko paciento busenoje (minutemis)
     string skyrius;
+
 public:
     Pacientas(const string& v, const string& sb)
         : vardas(v), sveikatosBusena(sb), laukimoLaikas(0),
           busena(GydymoBusena::LaukiaRegistracijos), likoLaikoBusenoje(1),
-          skyrius("Registratūra") // numatytas pradinis skyrius
-    {}
+          skyrius("Registratūra") {}
 
     void setSkyrius(const string& naujasSkyrius) {
         skyrius = naujasSkyrius;
@@ -284,54 +284,20 @@ public:
                 likoLaikoBusenoje = 0;
                 break;
             case GydymoBusena::Baigta:
-                // jau baigta, nekeičiam
                 break;
         }
-        atnaujintiSkyriuPagalBusena(); // atnaujinam skyrių po būsenos pasikeitimo
+        atnaujintiSkyriuPagalBusena();
     }
-};
 
-    void didintiLaukimoLaika() { laukimoLaikas++; }
+    void didintiLaukimoLaika() { 
+        laukimoLaikas++; 
+    }
 
-    // Simuliuoja vienos minutės prabėgimą paciento būsenos procese
     void simuliuotiMinute() {
         if (likoLaikoBusenoje > 0)
             likoLaikoBusenoje--;
         if (likoLaikoBusenoje == 0)
             pereitiIKitaBusena();
-    }
-
-    // Pereina į kitą gydymo būseną ir nustato laiką naujoje būsenoje
-    void pereitiIKitaBusena() {
-        switch (busena) {
-            case GydymoBusena::LaukiaRegistracijos:
-                busena = GydymoBusena::LaukiaGydytojo;
-                likoLaikoBusenoje = 2;
-                break;
-            case GydymoBusena::LaukiaGydytojo:
-                busena = GydymoBusena::Apziurimas;
-                likoLaikoBusenoje = 5;
-                break;
-            case GydymoBusena::Apziurimas:
-                busena = GydymoBusena::TyrimuLaukimas;
-                likoLaikoBusenoje = 4;
-                break;
-            case GydymoBusena::TyrimuLaukimas:
-                busena = GydymoBusena::LaukiaRezultatu;
-                likoLaikoBusenoje = 3;
-                break;
-            case GydymoBusena::LaukiaRezultatu:
-                busena = GydymoBusena::Gydomas;
-                likoLaikoBusenoje = 4;
-                break;
-            case GydymoBusena::Gydomas:
-                busena = GydymoBusena::Baigta;
-                likoLaikoBusenoje = 0;
-                break;
-            case GydymoBusena::Baigta:
-                // jau baigta, nekeičiam
-                break;
-        }
     }
 
     string getVardas() const { return vardas; }
@@ -345,8 +311,7 @@ public:
              << ", laukimo laikas: " << laukimoLaikas << " min."
              << ", būklė: " << busenaToString(busena)
              << ", liko laiko būsenai: " << likoLaikoBusenoje << " min."
-              << ", skyrius: " << skyrius
-             << endl;
+             << ", skyrius: " << skyrius << endl;
     }
 };
 
