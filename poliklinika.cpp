@@ -445,6 +445,7 @@ int gautiPasirinkima() {
 
 void pradetiZaidima(Poliklinika& poliklinika) {
     int pasirinkimas;
+    string pasirinktasIvykis;
     Finansai finansai(1000.0); // pradinis balansas
 
     do {
@@ -469,8 +470,27 @@ void pradetiZaidima(Poliklinika& poliklinika) {
                 poliklinika.rodytiDarbuotojus();
                 break;
             case 5:
-                cout << "\nĮvykiai:\n- Sutriko elektros tiekimas\n- Trūksta reagentų laboratorijoje\n- Atėjo netikėta inspekcija\n\n";
+                vector<string> ivykiai = {
+                    "Sutriko elektros tiekimas - pacientas negali pažiūrėti 'Labas rytas, Lietuva' ",
+                    "Trūksta reagentų laboratorijoje - laborantas pyksta",
+                    "Atėjo netikėta inspekcija, o poliklinikoje bėgioja pelė",
+                    "Sugedo rentgeno aparatas",
+                    "Gydytojas nori naujo kompiuterio, nes 'Senasis negražus' ",
+                    "Vandentiekio avarija laboratorijoje - užlieta patalpa",
+                    "Gydytojas išrašė netinkamų vaistų",
+                    "Buvo gandas, kad artėja inspekcija, bet ji neatvyksta",
+                    "Signalizacija suveikė be priežasties",
+                    "Gydytojas pareikalavo didesnio atlyginimo",
+                    "Valytoja miega darbo vietoje",
+                    "Vieno paciento dokumentas neteisingai susegtas",
+                    "Administratorė nori rožių registratūroje"
+                };
+
+                int index = rand() % ivykiai.size();
+                pasirinktasIvykis = ivykiai[index];
+                cout << "\nĮvykis: " << pasirinktasIvykis << "\n\n";
                 break;
+
             case 6: {
                 int sprendimas;
                 cout << "Sprendimo simuliacija: pasirinkite 1 (spręsti) arba 2 (ignoruoti): ";
@@ -486,7 +506,7 @@ void pradetiZaidima(Poliklinika& poliklinika) {
                     cout << "Sprendimas priimtas – problema išspręsta!\n";
                     finansai.sumazintiIslaidas(100.0);
                 } else {
-                    cout << "Ignoruota – kyla nenumatytos žiaurios pasėkmės!\n";
+                    cout << "Ignoruota – gali būti pasėkmių!\n";
                 }
                 break;
             }
