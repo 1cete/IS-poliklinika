@@ -486,7 +486,7 @@ void pradetiZaidima(Poliklinika& poliklinika) {
                     cout << "Sprendimas priimtas – problema išspręsta!\n";
                     finansai.sumazintiIslaidas(100.0);
                 } else {
-                    cout << "Ignoruota – gali kilti pasekmių!\n";
+                    cout << "Ignoruota – kyla nenumatytos žiaurios pasėkmės!\n";
                 }
                 break;
             }
