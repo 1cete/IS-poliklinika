@@ -218,10 +218,20 @@ class Pacientas {
     int laukimoLaikas;
     GydymoBusena busena;
     int likoLaikoBusenoje; // kiek dar laiko liko paciento busenoje (minutemis)
+    string skyrius;
 public:
     Pacientas(const string& v, const string& sb)
         : vardas(v), sveikatosBusena(sb), laukimoLaikas(0),
-          busena(GydymoBusena::LaukiaRegistracijos), likoLaikoBusenoje(1) {}
+          busena(GydymoBusena::LaukiaRegistracijos), likoLaikoBusenoje(1),
+          skyrius("Registratūra") // numatytas pradinis skyrius
+    {}
+
+    void setSkyrius(const string& naujasSkyrius) {
+        skyrius = naujasSkyrius;
+    }
+    string getSkyrius() const {
+        return skyrius;
+    }
 
     void didintiLaukimoLaika() { laukimoLaikas++; }
 
@@ -277,6 +287,7 @@ public:
              << ", laukimo laikas: " << laukimoLaikas << " min."
              << ", būklė: " << busenaToString(busena)
              << ", liko laiko būsenai: " << likoLaikoBusenoje << " min."
+              << ", skyrius: " << skyrius
              << endl;
     }
 };
@@ -356,6 +367,38 @@ public:
 
     void pridetiPacienta(const Pacientas& p) {
         pacientai.push_back(p);
+    }
+
+    void perkeltiPacientaISkyriu() {
+        if (pacientai.empty()) {
+            cout << "Nėra pacientų poliklinikoje.\n";
+            return;
+        }
+
+        cout << "Pacientų sąrašas:\n";
+        for (size_t i = 0; i < pacientai.size(); i++) {
+            cout << i+1 << ". " << pacientai[i].getVardas()
+                 << " (dabar skyrius: " << pacientai[i].getSkyrius() << ")\n";
+        }
+
+        cout << "Įveskite paciento numerį, kurį norite perkelti: ";
+        int pacIndex;
+        if (!(cin >> pacIndex) || pacIndex < 1 || pacIndex > (int)pacientai.size()) {
+            cout << "Neteisingas pasirinkimas.\n";
+            cin.clear();
+            cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            return;
+        }
+        cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+        cout << "Įveskite naują skyrių paciento perkėlimui: ";
+        string naujasSkyrius;
+        getline(cin, naujasSkyrius);
+
+        pacientai[pacIndex - 1].setSkyrius(naujasSkyrius);
+
+        cout << "Pacientas " << pacientai[pacIndex - 1].getVardas()
+             << " perkeltas į skyrių: " << naujasSkyrius << "\n";
     }
 
     void rodytiDarbuotojus() {
@@ -529,7 +572,7 @@ void pradetiZaidima(Poliklinika& poliklinika) {
                 cout << "- 5% nepatenkinti\n\n";
                 break;
             case 11:
-                cout << "Perkėlimas simuliuojamas... Pacientas perkeltas į kitą skyrių.\n";
+                poliklinika.perkeltiPacientaISkyriu();
                 break;
             case 12:
                 finansai.info();
