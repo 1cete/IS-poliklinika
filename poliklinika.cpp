@@ -682,10 +682,10 @@ int main() {
 
     // Pavyzdiniai pacientai
     poliklinika.pridetiPacienta(Pacientas("Petras", "Galvos skausmas"));
-    poliklinika.pridetiPacienta(Pacientas("Ieva", "Kosulys"));
-    poliklinika.pridetiPacienta(Pacientas("Lukas", "Pilvo skausmai"));
-    poliklinika.pridetiPacienta(Pacientas("Greta", "Alergija"));
-    poliklinika.pridetiPacienta(Pacientas("Martynas", "Akių paraudimas"));
+    poliklinika.pridetiPacienta(Pacientas("Ieva", "Gyvas svirplys ausyje"));
+    poliklinika.pridetiPacienta(Pacientas("Lukas", "Aortos disekacija"));
+    poliklinika.pridetiPacienta(Pacientas("Greta", "Šakutė gerklėje"));
+    poliklinika.pridetiPacienta(Pacientas("Martynas", "Meningitas"));
 
     // Paleisti meniu
     pradetiZaidima(poliklinika);
