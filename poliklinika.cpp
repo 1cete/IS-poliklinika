@@ -448,6 +448,22 @@ void pradetiZaidima(Poliklinika& poliklinika) {
     string pasirinktasIvykis;
     Finansai finansai(1000.0); // pradinis balansas
 
+    vector<string> ivykiai = {
+                    "Sutriko elektros tiekimas - pacientas negali pažiūrėti 'Labas rytas, Lietuva' ",
+                    "Trūksta reagentų laboratorijoje - laborantas pyksta",
+                    "Atėjo netikėta inspekcija, o poliklinikoje bėgioja pelė",
+                    "Sugedo rentgeno aparatas",
+                    "Gydytojas nori naujo kompiuterio, nes 'Senasis negražus' ",
+                    "Vandentiekio avarija laboratorijoje - užlieta patalpa",
+                    "Gydytojas išrašė netinkamų vaistų",
+                    "Buvo gandas, kad artėja inspekcija, bet ji neatvyksta",
+                    "Signalizacija suveikė be priežasties",
+                    "Gydytojas pareikalavo didesnio atlyginimo",
+                    "Valytoja miega darbo vietoje",
+                    "Vieno paciento dokumentas neteisingai susegtas",
+                    "Administratorė nori rožių registratūroje"
+                };
+
     do {
         pasirinkimas = gautiPasirinkima();
 
@@ -469,27 +485,12 @@ void pradetiZaidima(Poliklinika& poliklinika) {
             case 4:
                 poliklinika.rodytiDarbuotojus();
                 break;
-            case 5:
-                vector<string> ivykiai = {
-                    "Sutriko elektros tiekimas - pacientas negali pažiūrėti 'Labas rytas, Lietuva' ",
-                    "Trūksta reagentų laboratorijoje - laborantas pyksta",
-                    "Atėjo netikėta inspekcija, o poliklinikoje bėgioja pelė",
-                    "Sugedo rentgeno aparatas",
-                    "Gydytojas nori naujo kompiuterio, nes 'Senasis negražus' ",
-                    "Vandentiekio avarija laboratorijoje - užlieta patalpa",
-                    "Gydytojas išrašė netinkamų vaistų",
-                    "Buvo gandas, kad artėja inspekcija, bet ji neatvyksta",
-                    "Signalizacija suveikė be priežasties",
-                    "Gydytojas pareikalavo didesnio atlyginimo",
-                    "Valytoja miega darbo vietoje",
-                    "Vieno paciento dokumentas neteisingai susegtas",
-                    "Administratorė nori rožių registratūroje"
-                };
-
+            case 5: {
                 int index = rand() % ivykiai.size();
                 pasirinktasIvykis = ivykiai[index];
                 cout << "\nĮvykis: " << pasirinktasIvykis << "\n\n";
                 break;
+            }
 
             case 6: {
                 int sprendimas;
