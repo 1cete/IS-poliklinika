@@ -437,6 +437,34 @@ public:
         cout << endl;
     }
 
+    void irasytiDarbuotojaIFaila(const Darbuotojas& d) {
+    ofstream failas("darbuotojai.txt", ios::app); // papildyti failą
+    if (failas.is_open()) {
+        failas << "ID: " << d.getID()
+               << ", Vardas: " << d.getVardas()
+               << ", Pavardė: " << d.getPavarde()
+               << ", Pareigos: " << d.getPareigos()
+               << ", El. paštas: " << d.getElPastas()
+               << ", Užimtas: " << (d.arUzimtas() ? "Taip" : "Ne")
+               << endl;
+        failas.close();
+        cout << "Darbuotojas įrašytas į failą.\n";
+    } else {
+        cout << "Nepavyko atidaryti failo įrašymui.\n";
+    }
+}
+
+    void ikeltiDarbuotojusIsFailo() {
+    ifstream failas("darbuotojai.txt");
+    string eilute;
+    cout << "Įkelti darbuotojai iš failo:\n";
+    while (getline(failas, eilute)) {
+        cout << eilute << endl;
+    }
+    failas.close();
+}
+
+
     void rodytiPacientus() {
         cout << "Pacientai:\n";
         for (auto& p : pacientai) {
