@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 #include <vector>
 #include <string>
 #include <iomanip>
@@ -466,14 +467,39 @@ public:
 
     void registruotiPacienta() {
         cin.ignore(1000, '\n');
-        string vardas, bukle;
-        cout << "Įveskite paciento vardą: ";
-        getline(cin, vardas);
-        cout << "Įveskite sveikatos būklę: ";
-        getline(cin, bukle);
-        pridetiPacienta(Pacientas(vardas, bukle));
-        cout << "Pacientas užregistruotas sėkmingai!\n";
+    string vardas, bukle;
+    cout << "Įveskite paciento vardą: ";
+    getline(cin, vardas);
+    cout << "Įveskite sveikatos būklę: ";
+    getline(cin, bukle);
+
+    Pacientas naujas(vardas, bukle);
+    pridetiPacienta(naujas);
+
+    // Įrašymas į failą
+    ofstream failas("pacientai.txt", ios::app); // atidarom papildymui
+    if (failas.is_open()) {
+        failas << "Pacientas: " << vardas 
+               << ", Būklė: " << bukle 
+               << ", Skyrius: " << naujas.getSkyrius()
+               << ", Busena: " << busenaToString(naujas.getBusena())
+               << endl;
+        failas.close();
+        cout << "Pacientas įrašytas į failą.\n";
+    } else {
+        cout << "Nepavyko atidaryti failo įrašymui.\n";
     }
+}
+
+    void ikeltiPacientusIsFailo() {
+    ifstream failas("pacientai.txt");
+    string eilute;
+    cout << "Įkelti pacientai iš failo:\n";
+    while (getline(failas, eilute)) {
+        cout << eilute << endl;
+    }
+    failas.close();
+}
 
     void simuliuotiMinute() {
     for (auto& p : pacientai) {
