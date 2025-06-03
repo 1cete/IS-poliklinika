@@ -690,56 +690,10 @@ int main() {
      `=._`=./
     )" << std::endl;
 
-    // Gydytojai su specializacijomis
-    poliklinika.pridetiDarbuotoja(new Gydytojas("Jonas", "Kazlauskas", "Šeimos gydytojas", "jonas.kazlauskas@clinic.lt", {8,9,10,11,12}));
-    poliklinika.pridetiDarbuotoja(new Gydytojas("Rasa", "Petrauskienė", "Šeimos gydytojas", "rasa.petrauskiene@clinic.lt", {9,10,11,12,13,14}));
-    poliklinika.pridetiDarbuotoja(new Gydytojas("Agnė", "Vaitkutė", "Vaikų ligų gydytoja", "agne.vaitkute@clinic.lt", {8,9,10,11,12,13}));
-    poliklinika.pridetiDarbuotoja(new Gydytojas("Mindaugas", "Urbonas", "Akušeris ginekologas", "mindaugas.urbonas@clinic.lt", {10,11,12,13,14,15}));
-    poliklinika.pridetiDarbuotoja(new Gydytojas("Jurgita", "Stanevičiūtė", "Psichologė", "jurgita.staneviciute@clinic.lt", {9,10,11,12,13}));
-    poliklinika.pridetiDarbuotoja(new Gydytojas("Tomas", "Šalkauskis", "Kineziterapeutas", "tomas.salkauskis@clinic.lt", {8,9,10,11,12,13,14}));
-    poliklinika.pridetiDarbuotoja(new Gydytojas("Simona", "Mažeikytė", "Oftalmologė", "simona.mazeikyte@clinic.lt", {9,10,11,12,13}));
-    poliklinika.pridetiDarbuotoja(new Gydytojas("Vytautas", "Paškevičius", "Kardiologas", "vytautas.paskevicius@clinic.lt", {8,9,10,11,12,13}));
-    poliklinika.pridetiDarbuotoja(new Gydytojas("Rūta", "Marcinkevičienė", "Neurologė", "ruta.marcinkeviciene@clinic.lt", {9,10,11,12,13,14}));
-    poliklinika.pridetiDarbuotoja(new Gydytojas("Edita", "Jurkevičiūtė", "Dermatologė", "edita.jurkeviciute@clinic.lt", {8,9,10,11,12}));
-    poliklinika.pridetiDarbuotoja(new Gydytojas("Dainius", "Giedraitis", "Otorinolaringologas", "dainius.giedraitis@clinic.lt", {10,11,12,13,14,15}));
-    poliklinika.pridetiDarbuotoja(new Gydytojas("Loreta", "Žukauskaitė", "Psichiatrė", "loreta.zukauskaite@clinic.lt", {9,10,11,12,13}));
-    poliklinika.pridetiDarbuotoja(new Gydytojas("Justė", "Kuprevičiūtė", "Pediatrė", "juste.kupreviciute@clinic.lt", {8,9,10,11,12}));
-    poliklinika.pridetiDarbuotoja(new Gydytojas("Algis", "Tamkevičius", "Anesteziologas reanimatologas", "algis.tamkevicius@clinic.lt", {9,10,11,12,13,14}));
-    poliklinika.pridetiDarbuotoja(new Gydytojas("Tautvydas", "Kairys", "Urologas", "tautvydas.kairys@clinic.lt", {8,9,10,11,12}));
-    poliklinika.pridetiDarbuotoja(new Gydytojas("Monika", "Grigaitė", "Gastroenterologė", "monika.grigaite@clinic.lt", {9,10,11,12,13,14}));
-    poliklinika.pridetiDarbuotoja(new Gydytojas("Indrė", "Sabaliauskaitė", "Ergoterapeutė", "indre.sabaliauskaite@clinic.lt", {8,9,10,11,12}));
-    poliklinika.pridetiDarbuotoja(new Gydytojas("Andrius", "Dirgėla", "Pulmonologas", "andrius.dirgela@clinic.lt", {9,10,11,12,13}));
-    poliklinika.pridetiDarbuotoja(new Gydytojas("Ramunė", "Milinienė", "Radiologė", "ramune.miliniene@clinic.lt", {8,9,10,11,12}));
-
-    // Slaugytojos (5)
-    poliklinika.pridetiDarbuotoja(new Slaugytoja("Neringa", "Balčiūnaitė", "neringa.balciunaite@clinic.lt", {8,9,10,11,12,13}));
-    poliklinika.pridetiDarbuotoja(new Slaugytoja("Eglė", "Drungilaitė", "egle.drungilaite@clinic.lt", {9,10,11,12,13,14}));
-    poliklinika.pridetiDarbuotoja(new Slaugytoja("Asta", "Kalvaitienė", "asta.kalvaitiene@clinic.lt", {8,9,10,11,12}));
-    poliklinika.pridetiDarbuotoja(new Slaugytoja("Renata", "Kundrotienė", "renata.kundrotiene@clinic.lt", {9,10,11,12,13}));
-    poliklinika.pridetiDarbuotoja(new Slaugytoja("Laima", "Navickaitė", "laima.navickaite@clinic.lt", {8,9,10,11}));
-
-    // Administratoriai (3)
-    poliklinika.pridetiDarbuotoja(new Administratorius("Ieva", "Naveraitė", "ieva.naveraite@clinic.lt", {8,9,10,11,12}));
-    poliklinika.pridetiDarbuotoja(new Administratorius("Saulė", "Miknaitė", "saule.mikaite@clinic.lt", {9,10,11,12,13}));
-    poliklinika.pridetiDarbuotoja(new Administratorius("Emilija", "Grigonytė", "emilija.grigonyte@clinic.lt", {8,9,10,11}));
-    // Laborantai (5)
-    poliklinika.pridetiDarbuotoja(new Laborantas("Tadas", "Urbšys", "tadas.urbsys@clinic.lt", {8,9,10,11,12}));
-    poliklinika.pridetiDarbuotoja(new Laborantas("Inga", "Jankauskienė", "inga.jankauskiene@clinic.lt", {9,10,11,12,13}));
-    poliklinika.pridetiDarbuotoja(new Laborantas("Dainius", "Kalnietis", "dainius.kalnietis@clinic.lt", {8,9,10,11,12,13}));
-    poliklinika.pridetiDarbuotoja(new Laborantas("Tomas", "Petraitis", "tomas.petraitis@clinic.lt", {9,10,11,12,13,14}));
-    poliklinika.pridetiDarbuotoja(new Laborantas("Rugilė", "Kazlauskaitė", "rugile.kazlauskaite@clinic.lt", {8,9,10,11}));
-    // Valytojos (3)
-    poliklinika.pridetiDarbuotoja(new Valytoja("Rasa", "Petraitė", "rasa.petraite@clinic.lt", {8,9,10,11}));
-    poliklinika.pridetiDarbuotoja(new Valytoja("Neringa", "Balčiūnaitė", "neringa.balciunaite@clinic.lt", {9,10,11,12}));
-    poliklinika.pridetiDarbuotoja(new Valytoja("Laima", "Plieskytė", "laima.plieskyte@clinic.lt", {8,9,10}));
- 
-
-    // Pavyzdiniai pacientai
-    poliklinika.pridetiPacienta(Pacientas("Petras", "Galvos skausmas"));
-    poliklinika.pridetiPacienta(Pacientas("Ieva", "Gyvas svirplys ausyje"));
-    poliklinika.pridetiPacienta(Pacientas("Lukas", "Reumatinis vaskulitas"));
-    poliklinika.pridetiPacienta(Pacientas("Greta", "Šakutė gerklėje"));
-    poliklinika.pridetiPacienta(Pacientas("Martynas", "Meningitas"));
+   nuskaitytiDarbuotojusIsFailo("darbuotojai.txt", poliklinika);
+    nuskaitytiPacientusIsFailo("pacientai.txt", poliklinika);
+    rodytiMeniu(poliklinika);
+    rodytiMeniu(poliklinika);
 
     // Paleisti meniu
     pradetiZaidima(poliklinika);
