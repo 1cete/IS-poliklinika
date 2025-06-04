@@ -770,7 +770,7 @@ int main() {
     adresas.sun_family = AF_UNIX;
     strncpy(adresas.sun_path, SOKETO_FAILAS, sizeof(adresas.sun_path) - 1);
 
-    if (bind(serverioSoketas, (struct sockaddr*)&adresas, sizeof(adresas)) < 0)
+    if (::bind(serverioSoketas, (struct sockaddr*)&adresas, sizeof(adresas)) < 0)
         klaida("Bind klaida");
 
     if (listen(serverioSoketas, 1) < 0)
