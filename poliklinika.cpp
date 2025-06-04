@@ -5,7 +5,8 @@
 #include <iomanip>
 #include <cstdlib>
 #include <ctime>
-#include <limits>  
+#include <limits>
+#include <sstream>
 
 using namespace std;
 
@@ -21,17 +22,18 @@ enum GydymoBusena {
     Baigta
 };
 //cia konvertuojamas enum i teksta
-GydymoBusena stringToBusena(const string& s) {
-    if (s == "Laukia registracijos") return GydymoBusena::LaukiaRegistracijos;
-    if (s == "Laukia gydytojo") return GydymoBusena::LaukiaGydytojo;
-    if (s == "Apžiūrimas") return GydymoBusena::Apziurimas;
-    if (s == "Laukia tyrimų") return GydymoBusena::TyrimuLaukimas;
-    if (s == "Laukia rezultatų") return GydymoBusena::LaukiaRezultatu;
-    if (s == "Gydomas") return GydymoBusena::Gydomas;
-    if (s == "Gydymas baigtas") return GydymoBusena::Baigta;
-    return GydymoBusena::LaukiaRegistracijos;
-}
-
+string busenaToString(GydymoBusena b) {
+    switch (b) { //tikriname busena
+        //case leidzia vykdyti skirtingus veiksmus pagal reiksme
+        case GydymoBusena::LaukiaRegistracijos: return "Laukia registracijos";
+        case GydymoBusena::LaukiaGydytojo: return "Laukia gydytojo";
+        case GydymoBusena::Apziurimas: return "Apžiūrimas";
+        case GydymoBusena::TyrimuLaukimas: return "Laukia tyrimų";
+        case GydymoBusena::LaukiaRezultatu: return "Laukia rezultatų";
+        case GydymoBusena::Gydomas: return "Gydomas";
+        case GydymoBusena::Baigta: return "Gydymas baigtas";
+        default: return "Nežinoma";
+    }
 }
 //skyrius nustatom
 string gautiSkyriuPagalBusena(GydymoBusena busena) {
@@ -101,18 +103,6 @@ public:
     // Virtualus destruktorius, jei paveldima klasė
     virtual ~Darbuotojas() = default;
 
-    virtual string toString() const {
-    stringstream ss;
-    ss << getVardas() << ";" << getPavarde() << ";" << getPareigos()
-       << ";" << getElPastas();
-    return ss.str();
-}
-
-Pacientas(const string& v, const string& sb, GydymoBusena b, int laukLaikas, const string& skyr)
-: vardas(v), sveikatosBusena(sb), laukimoLaikas(laukLaikas),
-  busena(b), likoLaikoBusenoje(1), skyrius(skyr) {}
-
-
     // Getteriai
     int getID() const { return id; }
     const string& getVardas() const { return vardas; } 
@@ -147,6 +137,16 @@ Pacientas(const string& v, const string& sb, GydymoBusena b, int laukLaikas, con
         cout << endl;
     }
 };
+
+string Darbuotojas::toString() const {
+    stringstream ss;
+    ss << "ID: " << getID()
+       << ", Vardas: " << getVardas()
+       << ", Pavarde: " << getPavarde()
+       << ", Pareigos: " << getPareigos()
+       << ", El. paštas: " << getElPastas()
+       << ", Užimtas: " << (arUzimtas() ? "Taip" : "Ne");
+    return ss.str();
 
 // Statinio lauko inicializacija (būtina kažkur .cpp faile, arba šalia klasės)
 int Darbuotojas::nextID = 1;
@@ -404,7 +404,6 @@ public:
         pacientai.push_back(p);
     }
 
-
     void perkeltiPacientaISkyriu() {
         if (pacientai.empty()) {
             cout << "Nėra pacientų poliklinikoje.\n";
@@ -459,45 +458,15 @@ public:
     }
 }
 
-void nuskaitytiDarbuotojusIsFailo() {
-    ifstream failas("darbuotojai.txt");
-    if (!failas.is_open()) {
-        cerr << "Nepavyko atidaryti darbuotojai.txt\n";
-        return;
-    }
 
+    void nuskaitytiDarbuotojusIsFailo(const string& failoVardas, Poliklinika& poliklinika) {
+    ifstream failas(failoVardas);
     string eilute;
     while (getline(failas, eilute)) {
-        stringstream ss(eilute);
-        string idStr, vardas, pavarde, pareigos, uzimtasStr, elpastas;
-
-        getline(ss, idStr, ';');
-        getline(ss, vardas, ';');
-        getline(ss, pavarde, ';');
-        getline(ss, pareigos, ';');
-        getline(ss, uzimtasStr, ';');
-        getline(ss, elpastas, ';');
-
-        Darbuotojas* d = nullptr;
-        if (pareigos == "Gydytojas") {
-            d = new Gydytojas(vardas, pavarde, "Bendra", elpastas);
-        } else if (pareigos == "Slaugytoja") {
-            d = new Slaugytoja(vardas, pavarde, elpastas);
-        } else if (pareigos == "Administratorius") {
-            d = new Administratorius(vardas, pavarde, elpastas);
-        } else if (pareigos == "Laborantas") {
-            d = new Laborantas(vardas, pavarde, elpastas);
-        }
-
-        if (d) {
-            if (uzimtasStr == "1") d->uzimti();
-            pridetiDarbuotoja(d);
-        }
+        cout << "Įkeltas darbuotojas: " << eilute << endl;
     }
-
     failas.close();
 }
-
 
 
     void rodytiPacientus() {
@@ -508,53 +477,25 @@ void nuskaitytiDarbuotojusIsFailo() {
         cout << endl;
     }
 
-    void irasytiPacientusIFaila() {
-    ofstream failas("pacientai.txt");
-    if (!failas.is_open()) {
-        cout << "Nepavyko atidaryti failo įrašymui.\n";
-        return;
-    }
-
-    for (const auto& p : pacientai) {
-        failas << p.getVardas() << ";"
-               << p.getSveikatosBusena() << ";"
-               << p.getLaukimoLaikas() << ";"
-               << busenaToString(p.getBusena()) << ";"
-               << p.getSkyrius() << "\n";
-    }
-
-    failas.close();
-    cout << "Pacientų duomenys įrašyti į pacientai.txt\n";
-}
-
-
-
     void priskirtiGydytojusPacientams() {
-    for (auto& pacientas : pacientai) {
-        Gydytojas* laisvasGydytojas = nullptr;
-
-        for (auto darbuotojas : darbuotojai) {
-            Gydytojas* g = dynamic_cast<Gydytojas*>(darbuotojas);
-            if (g && !g->arUzimtas()) {
-                laisvasGydytojas = g;
-                break;
+        cout << "Priskyrimai:\n";
+        int dIndex = 0;
+        for (auto& pacientas : pacientai) {
+            while (dIndex < darbuotojai.size() && darbuotojai[dIndex]->arUzimtas()) {
+                dIndex++;
+            }
+            if (dIndex < darbuotojai.size()) {
+                darbuotojai[dIndex]->uzimti();
+                cout << "- " << darbuotojai[dIndex]->getPareigos() << " "
+                     << darbuotojai[dIndex]->getVardas() << " " << darbuotojai[dIndex]->getPavarde()
+                     << " priskirtas pacientui " << pacientas.getVardas() << endl;
+                dIndex++;
+            } else {
+                cout << "- Nėra laisvų gydytojų pacientui " << pacientas.getVardas() << endl;
             }
         }
-
-        if (laisvasGydytojas) {
-            laisvasGydytojas->pridetiPacienta(pacientas.getVardas());
-            laisvasGydytojas->uzimti();
-            cout << "Pacientas " << pacientas.getVardas()
-                 << " priskirtas gydytojui "
-                 << laisvasGydytojas->getVardas() << " "
-                 << laisvasGydytojas->getPavarde() << ".\n";
-        } else {
-            cout << "Nėra laisvų gydytojų pacientui "
-                 << pacientas.getVardas() << ".\n";
-        }
+        cout << endl;
     }
-}
-
 
     void registruotiPacienta() {
         cin.ignore(1000, '\n');
@@ -582,31 +523,14 @@ void nuskaitytiDarbuotojusIsFailo() {
     }
 }
 
-    void nuskaitytiPacientusIsFailo() {
-    ifstream failas("pacientai.txt");
-    if (!failas.is_open()) {
-        cerr << "Nepavyko atidaryti pacientai.txt\n";
-        return;
-    }
-
+    void nuskaitytiPacientusIsFailo(const string& failoVardas, Poliklinika& poliklinika) {
+    ifstream failas(failoVardas);
     string eilute;
     while (getline(failas, eilute)) {
-        stringstream ss(eilute);
-        string vardas, sveikata, aptarnautasStr, busena, lokacija;
-        getline(ss, vardas, ';');
-        getline(ss, sveikata, ';');
-        getline(ss, aptarnautasStr, ';');
-        getline(ss, busena, ';');
-        getline(ss, lokacija, '\n');
-        bool aptarnautas = (aptarnautasStr == "1");
-
-        Pacientas p(vardas, sveikata, aptarnautas, busena, lokacija);
-        pacientai.push_back(p);
+        cout << "Įkeltas pacientas: " << eilute << endl;
     }
-
     failas.close();
 }
-
 
     void simuliuotiMinute() {
     for (auto& p : pacientai) {
@@ -642,13 +566,6 @@ int gautiPasirinkima() {
     }
 }
 
-public void parodytiGydymoBusena() {
-    for (Pacientas p : pacientai) {
-        System.out.println(p.getVardas() + ": " + p.gydymoBusena());
-    }
-}
-
-
 void pradetiZaidima(Poliklinika& poliklinika) {
     int pasirinkimas;
     string pasirinktasIvykis;
@@ -678,7 +595,6 @@ void pradetiZaidima(Poliklinika& poliklinika) {
                 poliklinika.registruotiPacienta();
                 cout << "\n--- Pacientų sąrašas po registracijos ---\n";
                 poliklinika.rodytiPacientus(); // <-- tai parodys naujai pridėtą pacientą
-                poliklinika.irasytiPacientusIFaila();
                 break;
             case 2:
                 cout << "\nPaslaugų kainos:\n"
@@ -777,14 +693,12 @@ int main() {
      `=._`=./
     )" << std::endl;
 
-    // 🔽 Čia nuskaito iš failų
-    poliklinika.nuskaitytiDarbuotojusIsFailo();
-    poliklinika.nuskaitytiPacientusIsFailo();
+    nuskaitytiDarbuotojusIsFailo("darbuotojai.txt", poliklinika);
+    nuskaitytiPacientusIsFailo("pacientai.txt", poliklinika);
+    rodytiMeniu();
 
-    rodytiMeniu(poliklinika);
-
-    // Paleisti meniu
     pradetiZaidima(poliklinika);
+
 
     return 0;
 }

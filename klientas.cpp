@@ -1,22 +1,19 @@
-// klientas.cpp
 #include <iostream>
 #include <fstream>
 using namespace std;
 
 int main() {
-    string vardas, sveikata;
-    cout << "Įveskite paciento vardą: ";
-    getline(cin, vardas);
-    cout << "Įveskite sveikatos būklę: ";
-    getline(cin, sveikata);
+    string zaidejoVardas;
+    cout << "Įveskite žaidėjo vardą: ";
+    getline(cin, zaidejoVardas);
 
     ofstream failas("pacientai.txt", ios::app);
     if (failas.is_open()) {
-        failas << vardas << ";" << sveikata << ";0;Laukia registracijos;Registratūra\n";
+        failas << zaidejoVardas << "\n";
         failas.close();
-        cout << "Pacientas sėkmingai užregistruotas.\n";
+        cout << "Žaidėjas užregistruotas. Palaukite paciento generavimo serveryje.\n";
     } else {
-        cout << "Nepavyko atidaryti failo.\n";
+        cout << "Nepavyko atidaryti failo pacientai.txt\n";
     }
 
     return 0;
