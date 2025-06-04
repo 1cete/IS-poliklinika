@@ -7,8 +7,42 @@
 #include <ctime>
 #include <limits>
 #include <sstream>
+#include <unistd.h>
+#include <sys/socket.h>
+#include <sys/un.h>
+#include <thread>
+#include <cstring>
+
 
 using namespace std;
+
+#define SOKETO_FAILAS "./zaidimas.sock"
+#define BUFERIO_DYDIS 4096
+
+void klaida(const std::string& pranesimas) {
+    perror(pranesimas.c_str());
+    exit(EXIT_FAILURE);
+}
+
+void aptarnautiKlienta(int klientas) {
+    char buferis[BUFERIO_DYDIS];
+    ssize_t gauta;
+
+    while ((gauta = read(klientas, buferis, sizeof(buferis) - 1)) > 0) {
+        buferis[gauta] = '\0';
+        std::cout << "Gauta iš kliento: " << buferis << std::endl;
+
+        // Čia galima interpretuoti komandas iš kliento
+        std::string atsakymas = "OK: Gauta žinutė - ";
+        atsakymas += buferis;
+
+        write(klientas, atsakymas.c_str(), atsakymas.length());
+    }
+
+    std::cout << "Klientas atsijungė\n";
+    close(klientas);
+}
+
 
 //ok cia pasirodo paprastesnis rasymas nei keliu klasiu, tai paliekam.
     //jei klaus kas cia, tai enum: leidzia turet aisku sarasa busenu
@@ -696,13 +730,12 @@ void nuskaitytiPacientusIsFailo(const string& failoVardas, Poliklinika& poliklin
 }
 
 int main() {
-
- srand(time(0)); // dėl atsitiktinių skaičių inspekcijai
+    srand(time(0)); // dėl atsitiktinių skaičių inspekcijai
 
     Poliklinika poliklinika;
     poliklinika.sveikinimas();
 
-     // ASCII menas
+    // ASCII menas
     cout << R"(
       .----. 
        ===(_)==   LABA DIENA
@@ -725,6 +758,34 @@ int main() {
 
     pradetiZaidima(poliklinika);
 
+    int serverioSoketas, klientas;
+    struct sockaddr_un adresas;
 
+    unlink(SOKETO_FAILAS);
+
+    if ((serverioSoketas = socket(AF_UNIX, SOCK_STREAM, 0)) < 0)
+        klaida("Klaida kuriant soketą");
+
+    memset(&adresas, 0, sizeof(adresas));
+    adresas.sun_family = AF_UNIX;
+    strncpy(adresas.sun_path, SOKETO_FAILAS, sizeof(adresas.sun_path) - 1);
+
+    if (bind(serverioSoketas, (struct sockaddr*)&adresas, sizeof(adresas)) < 0)
+        klaida("Bind klaida");
+
+    if (listen(serverioSoketas, 1) < 0)
+        klaida("Klaida listen");
+
+    std::cout << "Laukiama kliento...\n";
+
+    while (true) {
+        klientas = accept(serverioSoketas, NULL, NULL);
+        if (klientas < 0) continue;
+
+        std::cout << "Klientas prisijungė\n";
+        std::thread(aptarnautiKlienta, klientas).detach();
+    }
+
+    close(serverioSoketas);
     return 0;
 }
