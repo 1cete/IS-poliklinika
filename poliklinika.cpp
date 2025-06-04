@@ -84,48 +84,50 @@ void rodytiMeniu() {
 // Bazinė klasė Darbuotojas
 class Darbuotojas {
 private:
-    static int nextID;              // ID generatorius
-    int id;                        //darbuotojo ID
+    static int nextID;
+    int id;
     string vardas;
     string pavarde;
     string pareigos;
     bool uzimtas;
     string elPastas;
-    vector<int> darboValandos; // Darbo valandos (pvz. nuo 8 iki 17)
+    vector<int> darboValandos;
+
 public:
-// Konstruktorius su numatytais kontaktais ir darbo grafiku
-    Darbuotojas(string v, string p, string par,
-                string email = "",
+    Darbuotojas(string v, string p, string par, string email = "",
                 vector<int> grafikas = {8,9,10,11,12,13,14,15,16,17})
         : id(nextID++), vardas(move(v)), pavarde(move(p)), pareigos(move(par)),
-          uzimtas(false), elPastas(move(email)), darboValandos(move(grafikas)) {} //reikia iki cia pakeisti nuo pirmu skliaustu
+          uzimtas(false), elPastas(move(email)), darboValandos(move(grafikas)) {}
 
-    // Virtualus destruktorius, jei paveldima klasė
     virtual ~Darbuotojas() = default;
+    virtual string toString() const {
+        stringstream ss;
+        ss << "ID: " << id
+           << ", Vardas: " << vardas
+           << ", Pavarde: " << pavarde
+           << ", Pareigos: " << pareigos
+           << ", El. paštas: " << elPastas
+           << ", Užimtas: " << (uzimtas ? "Taip" : "Ne");
+        return ss.str();
+    }
 
-    // Getteriai
     int getID() const { return id; }
-    const string& getVardas() const { return vardas; } 
-    const string& getPavarde() const { return pavarde; } 
-    const string& getPareigos() const { return pareigos; } 
-    bool arUzimtas() const { return uzimtas; } 
-    const string& getElPastas() const { return elPastas; } 
+    const string& getVardas() const { return vardas; }
+    const string& getPavarde() const { return pavarde; }
+    const string& getPareigos() const { return pareigos; }
+    bool arUzimtas() const { return uzimtas; }
+    const string& getElPastas() const { return elPastas; }
     const vector<int>& getDarboValandos() const { return darboValandos; }
-    
-    // Statuso keitimas
     void uzimti() { uzimtas = true; }
     void atlaisvinti() { uzimtas = false; }
 
     bool dirbaValanda(int valanda) const {
-    for (int v : darboValandos) {
-        if (v == valanda) {
-            return true;
+        for (int v : darboValandos) {
+            if (v == valanda) return true;
         }
+        return false;
     }
-    return false;
-}
 
-    // Išvedame info apie darbuotoją
     virtual void info() const {
         cout << left << setw(4) << id
              << setw(20) << (vardas + " " + pavarde)
@@ -138,17 +140,6 @@ public:
     }
 };
 
-string Darbuotojas::toString() const {
-    stringstream ss;
-    ss << "ID: " << getID()
-       << ", Vardas: " << getVardas()
-       << ", Pavarde: " << getPavarde()
-       << ", Pareigos: " << getPareigos()
-       << ", El. paštas: " << getElPastas()
-       << ", Užimtas: " << (arUzimtas() ? "Taip" : "Ne");
-    return ss.str();
-
-// Statinio lauko inicializacija (būtina kažkur .cpp faile, arba šalia klasės)
 int Darbuotojas::nextID = 1;
 
 // Paveldima klasė Gydytojas
@@ -458,17 +449,6 @@ public:
     }
 }
 
-
-    void nuskaitytiDarbuotojusIsFailo(const string& failoVardas, Poliklinika& poliklinika) {
-    ifstream failas(failoVardas);
-    string eilute;
-    while (getline(failas, eilute)) {
-        cout << "Įkeltas darbuotojas: " << eilute << endl;
-    }
-    failas.close();
-}
-
-
     void rodytiPacientus() {
         cout << "Pacientai:\n";
         for (auto& p : pacientai) {
@@ -523,14 +503,6 @@ public:
     }
 }
 
-    void nuskaitytiPacientusIsFailo(const string& failoVardas, Poliklinika& poliklinika) {
-    ifstream failas(failoVardas);
-    string eilute;
-    while (getline(failas, eilute)) {
-        cout << "Įkeltas pacientas: " << eilute << endl;
-    }
-    failas.close();
-}
 
     void simuliuotiMinute() {
     for (auto& p : pacientai) {
@@ -668,6 +640,61 @@ void pradetiZaidima(Poliklinika& poliklinika) {
     } while (pasirinkimas != 0);
 }
 
+void nuskaitytiDarbuotojusIsFailo(const string& failoVardas, Poliklinika& poliklinika) {
+    ifstream failas(failoVardas);
+    string eilute;
+    while (getline(failas, eilute)) {
+        stringstream ss(eilute);
+        string idLabel, idStr, vardasLabel, vardas, pavardeLabel, pavarde,
+               pareigosLabel, pareigos, emailLabel, elpastas, uzimtasLabel, uzimtasStr;
+
+        getline(ss, idLabel, ':'); getline(ss, idStr, ',');
+        getline(ss, vardasLabel, ':'); getline(ss, vardas, ',');
+        getline(ss, pavardeLabel, ':'); getline(ss, pavarde, ',');
+        getline(ss, pareigosLabel, ':'); getline(ss, pareigos, ',');
+        getline(ss, emailLabel, ':'); getline(ss, elpastas, ',');
+        getline(ss, uzimtasLabel, ':'); getline(ss, uzimtasStr);
+
+        vardas = vardas.substr(vardas.find_first_not_of(" "));
+        pavarde = pavarde.substr(pavarde.find_first_not_of(" "));
+        pareigos = pareigos.substr(pareigos.find_first_not_of(" "));
+        elpastas = elpastas.substr(elpastas.find_first_not_of(" "));
+
+        Darbuotojas* d = nullptr;
+        if (pareigos == "Gydytojas") d = new Gydytojas(vardas, pavarde, "Vidaus", elpastas);
+        else if (pareigos == "Slaugytoja") d = new Slaugytoja(vardas, pavarde, elpastas);
+        else if (pareigos == "Administratorius") d = new Administratorius(vardas, pavarde, elpastas);
+        else if (pareigos == "Laborantas") d = new Laborantas(vardas, pavarde, elpastas);
+        else if (pareigos == "Valytoja") d = new Valytoja(vardas, pavarde, elpastas);
+        else continue;
+
+        if (uzimtasStr.find("Taip") != string::npos) d->uzimti();
+
+        poliklinika.pridetiDarbuotoja(d);
+    }
+    failas.close();
+}
+
+void nuskaitytiPacientusIsFailo(const string& failoVardas, Poliklinika& poliklinika) {
+    ifstream failas(failoVardas);
+    string eilute;
+    while (getline(failas, eilute)) {
+        string vardas, bukle;
+        size_t pos1 = eilute.find("Pacientas: ");
+        size_t pos2 = eilute.find(", Būklė: ");
+        if (pos1 != string::npos && pos2 != string::npos) {
+            vardas = eilute.substr(pos1 + 10, pos2 - (pos1 + 10));
+            size_t pos3 = eilute.find(", Skyrius: ", pos2);
+            if (pos3 != string::npos) {
+                bukle = eilute.substr(pos2 + 9, pos3 - (pos2 + 9));
+                Pacientas p(vardas, bukle);
+                poliklinika.pridetiPacienta(p);
+            }
+        }
+    }
+    failas.close();
+}
+
 int main() {
 
  srand(time(0)); // dėl atsitiktinių skaičių inspekcijai
@@ -695,7 +722,6 @@ int main() {
 
     nuskaitytiDarbuotojusIsFailo("darbuotojai.txt", poliklinika);
     nuskaitytiPacientusIsFailo("pacientai.txt", poliklinika);
-    rodytiMeniu();
 
     pradetiZaidima(poliklinika);
 

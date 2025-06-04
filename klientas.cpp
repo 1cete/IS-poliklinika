@@ -11,7 +11,7 @@ int main() {
     if (failas.is_open()) {
         failas << zaidejoVardas << "\n";
         failas.close();
-        cout << "Žaidėjas užregistruotas. Palaukite paciento generavimo serveryje.\n";
+        cout << "Žaidėjas užregistruotas.\n";
     } else {
         cout << "Nepavyko atidaryti failo pacientai.txt\n";
     }
